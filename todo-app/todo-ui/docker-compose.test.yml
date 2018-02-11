@@ -1,0 +1,16 @@
+# This is the docker-compose settings file leveraged when testing  the todo-ui application's container.
+# Merge this file with docker-compose to build and run the todo-ui container. Note that docker-compose.override.yml is
+# not automatically picked up when using the `-f` parameter below.
+# `docker-compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.test.yml build`
+# `docker-compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.test.yml run todo-ui-tester`
+version: "3"
+services:
+  todo-ui-tester:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: todo-ui-tester
+    depends_on:
+      - todo-ui
+    environment:
+      - APPLICATION_BASE_URL=${APPLICATION_BASE_URL:-http://todo-ui}

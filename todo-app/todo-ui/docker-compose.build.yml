@@ -1,0 +1,46 @@
+# This is the docker-compose settings file leveraged when building and running the application's container.
+# Merge this file with docker-compose to build and run the todo-ui container. Note that docker-compose.override.yml is
+# not automatically picked up when using the `-f` parameter below.
+# `docker-compose -f docker-compose.yml -f docker-compose.build.yml build`
+# `docker-compose -f docker-compose.yml -f docker-compose.build.yml up`
+version: "3"
+services:
+  todo-ui:
+    build:
+      context: .
+    image: todo-ui
+    ports:
+      - "80:80"
+    depends_on:
+      - todo-api
+      - user-api
+    environment:
+      - REACT_APP_CLIENT_ID=${AZURE_APP_ID}
+      - IS_TEST_MODE=${IS_TEST_MODE:-false}
+      - REACT_APP_TENANT=${AZURE_AD_TENANT}
+  todo-api:
+    environment:
+      MONGODB_URL: 'mongodb:27017'
+      SPRING_LOG_LEVEL: INFO
+      APP_LOG_LEVEL: DEBUG
+      AZURE_APP_ID: '${AZURE_APP_ID}'
+      AD_IDENTITY_META_DATA_URL: '${AZURE_IDENTITY_META_DATA:-https://login.microsoftonline.com/architech.onmicrosoft.com/v2.0/.well-known/openid-configuration}'
+      AZURE_CLIENT_SECRET: '${AZURE_CLIENT_SECRET}'
+      IS_TEST_MODE: '${IS_TEST_MODE:-false}'
+      USER_API_BASE_URL: http://user-api:8082
+  user-api-mongodb:
+    volumes:
+      - 'user-api-data:/data/db'
+      - 'user-api-config-data:/data/config'
+  user-api:
+    environment:
+      IS_TEST_MODE: '${IS_TEST_MODE:-false}'
+      MONGODB_URL: 'mongodb://user-api-mongodb:27017/user-api'
+      LOG_LEVEL: info
+      AZURE_IDENTITY_META_DATA: '${AZURE_IDENTITY_META_DATA:-https://login.microsoftonline.com/architech.onmicrosoft.com/v2.0/.well-known/openid-configuration}'
+      AZURE_APP_ID: '${AZURE_APP_ID}'
+volumes:
+  user-api-data:
+    external: false
+  user-api-config-data:
+    external: false

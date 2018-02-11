@@ -1,0 +1,23 @@
+# An example of an HPA manifest using apiVersion autoscaling/v2beta1
+# This version enables you to specify other resource metrics such
+# as memory and custom metrics
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apache
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta2
+    kind: Deployment
+    name: php-apache
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 50 # % utilization
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 75

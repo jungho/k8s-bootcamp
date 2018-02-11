@@ -1,0 +1,15 @@
+# deploy the pod using 'kubectl create -f busybox-pod.yml'
+# get pod details using 'kubectl describe pod/busybox-example'
+# attach to the pod using 'kubectl attach busybox-example' and run some shell commands
+# delete the pod using 'kubectl delete -f busybox-pod.yml'
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-example
+  labels:
+    day1: busybox
+spec:
+  containers:
+  - name: my-busybox
+    image: busybox

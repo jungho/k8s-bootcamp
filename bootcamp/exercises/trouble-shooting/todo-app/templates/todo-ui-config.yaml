@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Values.WebUI.ConfigName}}
+data:
+  is_test_mode: "{{.Values.Global.IsTesting}}"
+

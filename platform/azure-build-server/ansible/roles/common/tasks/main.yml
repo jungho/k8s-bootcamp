@@ -1,0 +1,20 @@
+---
+- name: Upgrade all packages
+  yum: name=* state=latest update_cache=yes
+
+- name: Install EPEL repo
+  become: yes
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install Git
+  become: yes
+  yum:
+    name: git
+    state: present
+
+# Put SELinux in permissive mode, nginx had issues accessing jenkins.
+- selinux:
+    policy: targeted
+    state: permissive

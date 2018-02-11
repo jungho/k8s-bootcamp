@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Values.TodoAPI.ConfigName}}
+data:
+  db_url: {{.Values.MongoDb.ServiceName}}:{{.Values.MongoDb.ServicePort}}
+  is_test_mode: "{{.Values.Global.IsTesting}}"
+  app_log_level: {{.Values.Global.LogLevel}}
+  spring_log_level: {{.Values.Global.LogLevel}}
+  allowed_origins: "*"
+  user_api_url: "http://{{.Values.UserAPI.ServiceName}}:{{.Values.UserAPI.ServicePort}}"
+

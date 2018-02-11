@@ -1,0 +1,61 @@
+.add-todo-container{
+    padding: 35px 0 35px 0;
+}
+
+form .form-inline .form-group label{
+    color: #898989;
+}
+
+form .add-todo-actions{
+    margin-top: 35px;
+    margin-bottom: 25px;
+}
+
+@media screen and (min-width: 480px) {
+
+    .add-todo-row{
+        display: flex;
+        border: 1px solid #ccc;
+        padding: 12px 0 12px 0;
+    }
+
+    #todo-description{
+        width: 100%;
+    }
+
+    form .form-inline .form-group .Select{
+        display: inline-flex;
+        width: 85%;
+    }
+
+    form .form-inline .form-group .form-control{
+        width: 85%;
+    }
+    form .form-inline .form-group label{
+        margin-right: 5px;
+    }
+    form .add-todo-actions button.btn{
+        width: 100px;
+        margin-right: 15px;
+    }
+}
+
+@media screen and (min-width: 767px) {
+    form .form-inline .form-group .form-control{
+        width: 82%;
+    }
+    form .form-inline .form-group .Select{
+        display: inline-flex;
+        width: 80%;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    form .form-inline .form-group .form-control{
+        width: 85%;
+    }
+    form .form-inline .form-group .Select{
+        display: inline-flex;
+        width: 80%;
+    }
+}

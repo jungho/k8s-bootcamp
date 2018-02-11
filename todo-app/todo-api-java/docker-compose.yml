@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - '27017:27017'
+  user-api-mongodb:
+    image: mongo
+  user-api:
+    build:
+      context: ../user-api
+    image: user-api
+    ports:
+      - '8082:8082'
+    environment:
+      IS_TEST_MODE: '${IS_TEST_MODE}'
+      MONGODB_URL: 'mongodb://user-api-mongodb:27017/user-api'
+      APP_LOG_LEVEL: '${APP_LOG_LEVEL}'
+      AZURE_IDENTITY_META_DATA: '${AZURE_IDENTITY_META_DATA}'
+      AZURE_APP_ID: '${AZURE_APP_ID}'
+    depends_on:
+      - user-api-mongodb

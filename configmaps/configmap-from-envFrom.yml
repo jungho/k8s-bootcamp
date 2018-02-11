@@ -1,0 +1,28 @@
+# 1) Deploy the configmap and this manifest
+#
+# kubectl create -f app-properties.yml
+# kubectl create -f configmap-from-envFrom.yml
+#
+# 2) Exec into the pod
+#
+# kubectl exec -ti cm-envfrom -- sh
+#
+# 3) In the shell:
+#
+# env
+#
+# You will see the LOG_LEVEL environment variable defined.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cm-envfrom
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    #here we are saying create a set of environment variables
+    #from the content of the app-properties ConfigMap
+    envFrom:
+    - configMapRef:
+        name: app-properties

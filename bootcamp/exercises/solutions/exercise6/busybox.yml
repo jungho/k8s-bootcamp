@@ -1,0 +1,34 @@
+# 1) Create a configmap
+# 
+# kubectl create configmap app-config --from-file=application.properties
+# 
+# 2) Deploy the busybox pod
+# 
+# kubectl create -f busybox.yml
+# 
+# 3) access the busybox shell and read the environment variable
+#
+# kubectl exec busybox -ti -- sh
+# $env
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+spec:
+  containers:
+  - name: busybox
+    image: k8s.gcr.io/busybox
+    #so that busybox does not just start up and crash
+    command: [ "/bin/sh", "-c", "sleep 30000" ]
+    #this is where we expose the configmap key/values as
+    #environment variables.
+    env:
+      - name: APPLICATION_PROPERTIES
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            #note the key is the name of the file
+            #you can override this
+            key: application.properties
+    imagePullPolicy: IfNotPresent

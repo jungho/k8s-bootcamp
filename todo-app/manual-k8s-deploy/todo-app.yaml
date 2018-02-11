@@ -1,0 +1,215 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+spec:
+  ports:
+  - port: 27017
+  selector:
+    app: mongodb
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongodata
+          mountPath: /data/db
+      volumes:
+      - name: mongodata
+        #Only using emptyDir for this simple example. Because volume lifecycle is tied
+        #to the pod lifecycle, any data will be lost when the pod is shutdown.
+        #For databases, which require durable storage, use network storage volume types.
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-api
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: todo-api
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: todo-api
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: todo-api
+    spec:
+      containers:
+      - name: todo-api
+        image: architechbootcamp/todo-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGODB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: todo-api-config
+              key: db_url
+        - name: IS_TEST_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: todo-api-config
+              key: is_test_mode
+        - name: SPRING_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: todo-api-config
+              key: spring_log_level
+        - name: APP_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: todo-api-config
+              key: app_log_level
+        - name: USER_API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: todo-api-config
+              key: user_api_url
+        - name: AZURE_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: azure_app_id
+        - name: AD_IDENTITY_META_DATA_URL
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: ad_identity_meta_data
+        - name: AZURE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: azure_client_secret
+      #imagePullSecrets:
+      #  - name: registry_credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-app-ui
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: todo-app-ui
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: todo-app-ui
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: todo-app-ui
+    spec:
+      containers:
+      - name: todo-app-ui
+        image: architechbootcamp/todo-ui:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: REACT_APP_TEST_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: todo-ui-config
+              key: is_test_mode
+        - name: REACT_APP_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: azure_app_id
+        - name: REACT_APP_TENANT
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: ad_tenant
+      #imagePullSecrets:
+      # - name: techdemosecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-api
+spec:
+  ports:
+  - port: 8082
+    targetPort: 8082
+  selector:
+    app: user-api
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: user-api
+spec:
+  replicas:  2
+  minReadySeconds: 3
+  template:
+    metadata:
+      labels:
+        app: user-api
+        tier: backend
+    spec:
+      containers:
+      - name: user-api
+        image: architechbootcamp/user-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8082
+        env:
+        - name: MONGODB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: user-api-config
+              key: db_url
+        - name: IS_TEST_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: user-api-config
+              key: is_test_mode
+        - name: APP_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: user-api-config
+              key: app_log_level
+        - name: AZURE_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: azure_app_id
+        - name: AZURE_IDENTITY_META_DATA
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: ad_identity_meta_data
+      #imagePullSecrets:
+      #- name: registry_credentials
+

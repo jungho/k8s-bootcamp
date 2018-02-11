@@ -1,0 +1,20 @@
+# RoleBindings grant the privileges defined in a given role
+# to a subject (e.g. user) in a given namespace.  RoleBindings
+# grant privileges at the namespace level.  To grant privileges at
+# the cluster level, use ClusterRoleBindings
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1 #for v1.8.0++
+#apiVersion: rbac.authorization.k8s.io/v1beta1 #for v1.7.x
+metadata:
+  name: production-deployer
+  namespace: production
+roleRef:
+  kind: Role
+  apiGroup: rbac.authorization.k8s.io
+  name: production-role
+subjects:
+- kind: User
+  name: jenkins
+  namespace: production
+  apiGroup: rbac.authorization.k8s.io

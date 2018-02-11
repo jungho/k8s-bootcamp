@@ -1,0 +1,23 @@
+# Merge this file with docker-compose to build and run the todo-api container
+# `docker-compose -f docker-compose.yml -f docker-compose.build.yml build`
+# `docker-compose -f docker-compose.yml -f docker-compose.build.yml up`
+version: '3'
+services:
+  todo-api:
+    build:
+      context: .
+    image: todo-api
+    ports:
+      - '8080:8080'
+    environment:
+      MONGODB_URL: 'mongodb:27017'
+      IS_TEST_MODE: ${IS_TEST_MODE}
+      APP_LOG_LEVEL: DEBUG
+      SPRING_LOG_LEVEL: INFO
+      ALLOWED_ORIGINS: '*'
+      AZURE_APP_ID: ${AZURE_APP_ID}
+      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
+      USER_API_BASE_URL: 'http://user-api:8082'
+    depends_on:
+      - mongodb
+      - user-api

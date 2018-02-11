@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - '27017:27017'
+  user-api-mongodb:
+    image: mongo
+  user-api:
+    build:
+      context: ../user-api
+    image: user-api
+    depends_on:
+      - user-api-mongodb
+  todo-api:
+    build:
+      context: ../todo-api-java
+    image: todo-api
+    depends_on:
+      - mongodb
+      - user-api

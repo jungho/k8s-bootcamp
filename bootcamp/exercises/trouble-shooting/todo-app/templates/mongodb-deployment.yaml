@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name:  {{ .Values.MongoDb.ServiceName }}
+spec:
+  ports:
+  - port: {{ .Values.MongoDb.ServicePort }}
+  selector:
+    app: {{ .Values.MongoDb.Name }}
+    tier: data-tier
+    environment: {{.Values.Global.Environment}}
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{.Values.MongoDb.Name}}
+spec:
+  replicas: {{.Values.MongoDb.Replicas}}
+  minReadySeconds: 2
+  template:
+    metadata:
+      labels:
+        app:  {{ .Values.MongoDb.Name }}
+        tier: data-tier
+        environment: {{.Values.Global.Environment}}
+    spec:
+      containers:
+        - name:  {{ .Values.MongoDb.Name }}
+          image: {{ .Values.MongoDb.Image }}
+          ports:
+           - containerPort: {{ .Values.MongoDb.ContainerPort }}

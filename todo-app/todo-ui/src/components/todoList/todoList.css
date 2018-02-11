@@ -1,0 +1,45 @@
+h1[data-toggle="collapse"]:before
+{
+    font-family: 'FontAwesome';
+    color: #737373;
+    content: "\f107";
+    font-size: 18px;
+    line-height: 22px;
+    margin-right: 15px;
+    position: relative;
+    bottom: 5px;
+
+}
+h1[data-toggle="collapse"].collapsed:before
+{
+    font-family: 'FontAwesome';
+    color: #737373;
+    content: "\f105";
+    font-size: 18px;
+    line-height: 22px;
+    margin-right: 19px;
+    margin-left: 1px;
+    position: relative;
+    bottom: 5px;
+}
+
+h1 small{
+    vertical-align: super;
+    font-size: 50%;
+}
+
+.past-due-container .todo-container .todo-item.not-done .date-container{
+    -webkit-animation-name: over-due; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 2s; /* Safari 4.0 - 8.0 */
+    animation-timing-function: ease-in-out;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-name: over-due;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes over-due {
+    0% {color: red; text-shadow: 0 0 1px rgba(253, 100, 5, 0.2);}
+    50% {color: red; text-shadow: 0 0 1px rgba(253, 100, 5, 0.8);}
+    100% {color: red; text-shadow: 0 0 1px rgba(253, 100, 5, 0.2);}
+}

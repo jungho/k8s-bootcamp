@@ -1,0 +1,21 @@
+# The same command to create an HPA imperatively is:
+# 
+# kubectl autoscale deployment <deployment name> --cpu-percent=50 --min=1 --max=10
+#
+# To deploy this HPA use:
+# 
+# kubectl create -f php-apache-hpa.yml
+# 
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apache
+  namespace: default
+spec:
+  maxReplicas: 10
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1beta2
+    kind: Deployment
+    name: php-apache
+  targetCPUUtilizationPercentage: 50

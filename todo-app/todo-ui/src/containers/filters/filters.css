@@ -1,0 +1,28 @@
+.filters-container{
+    position:relative;
+    z-index: 1000;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: #ffffff;
+    top: -10px;
+    padding-top: 35px;
+    height: 110px;
+    margin: 0 15px 0px 15px;
+    border-radius: 5px;
+}
+
+.filters-container label.btn{
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.filters-container label.btn.success{
+
+}
+
+@media screen and (max-width: 767px) {
+    .filters-container{
+        margin: 0;
+        height: 160px;
+        top: -75px;
+    }
+}

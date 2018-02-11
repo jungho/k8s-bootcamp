@@ -1,0 +1,28 @@
+server:
+    port: 8080
+spring:
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_URL:localhost:27017}
+      database: todo-app
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+logging:
+  level:
+    root: WARN
+    org.springframework.web: ${SPRING_LOG_LEVEL:debug}
+    ca.architech: ${APP_LOG_LEVEL:debug}
+
+azure:
+  activedirectory:
+    active-directory-groups: group1,group2
+    client-id: ${AZURE_APP_ID}
+    client-secret: ${AZURE_CLIENT_SECRET}
+
+api:
+  user:
+    baseUrl: ${USER_API_BASE_URL:http://localhost:8082}
+  todo:
+    isTestMode: ${IS_TEST_MODE:false}

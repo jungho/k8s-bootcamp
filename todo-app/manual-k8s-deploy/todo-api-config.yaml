@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo-api-config
+data:
+  db_url: mongodb:27017
+  spring_log_level: INFO
+  app_log_level: INFO
+  #boolean values must be quoted!
+  is_test_mode: "true"
+  #this is the service name and port for the user-api defined in todo-app.yaml
+  user_api_url: "http://user-api:8082"

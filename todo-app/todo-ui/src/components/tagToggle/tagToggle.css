@@ -1,0 +1,67 @@
+.btn i.fa.tag-cancel{
+    display: none;
+}
+.btn.active i.fa.tag-cancel{
+    display: inline;
+    position: relative;
+    left: 5px;
+    top: -5px;
+}
+
+label.tag-toggle.btn{
+    border-width: 2px;
+    -webkit-transition: all 0.4s; /* Safari */
+    transition: all 0.4s;
+
+}
+
+label.tag-toggle.btn.btn-primary{
+    background-color: #ffffff;
+    color: #2e6da4;
+}
+label.tag-toggle.btn.btn-primary.active,
+label.tag-toggle.btn.btn-primary:hover{
+    background-color: #2e6da4;
+    color: #ffffff;
+}
+
+label.tag-toggle.btn.btn-success{
+    background-color: #ffffff;
+    color: #4cae4c;
+}
+label.tag-toggle.btn.btn-success.active,
+label.tag-toggle.btn.btn-success:hover{
+    background-color: #4cae4c;
+    color: #ffffff;
+}
+
+label.tag-toggle.btn.btn-warning{
+    background-color: #ffffff;
+    color: #eea236;
+}
+label.tag-toggle.btn.btn-warning.active,
+label.tag-toggle.btn.btn-warning:hover{
+    background-color: #eea236;
+    color: #ffffff;
+}
+
+
+label.tag-toggle.btn.btn-danger{
+    background-color: #ffffff;
+    color: #d43f3a;
+}
+label.tag-toggle.btn.btn-danger.active,
+label.tag-toggle.btn.btn-danger:hover{
+    background-color: #d43f3a;
+    color: #ffffff;
+}
+
+label.tag-toggle.btn.btn-info{
+    background-color: #ffffff;
+    color: #46b8da;
+}
+label.tag-toggle.btn.btn-info.active,
+label.tag-toggle.btn.btn-info:hover{
+    background-color: #46b8da;
+    color: #ffffff;
+}

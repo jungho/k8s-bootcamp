@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: ds-one
+spec:
+  #as of 1.8 a selector is required
+  selector:
+    matchLabels:
+      system: DaemonSetOne
+  template:
+  #Note that there is no replica field
+  #With Daemonsets, a pod is deployed to EACH node
+    metadata:
+      labels:
+        system: DaemonSetOne
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80

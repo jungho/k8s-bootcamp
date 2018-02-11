@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.WebUI.ServiceName}}
+spec:
+  ports:
+  - port: {{ .Values.WebUI.ServicePort }}
+  selector:
+    tier: frontend
+    app: {{.Values.WebUI.Name}}
+    environment: {{.Values.Global.Environment}}
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name:  {{.Values.WebUI.Name}}
+spec:
+  replicas: {{.Values.WebUI.Replicas}}
+  template:
+    metadata:
+      labels:
+        app:  {{.Values.WebUI.Name}}
+        tier: frontend
+        environment: {{.Values.Global.Environment}}
+    spec:
+      containers:
+      - name: {{.Values.WebUI.Name}}
+        image: {{.Values.WebUI.Image}}:{{.Values.WebUI.ImageTag}}
+        ports:
+          - containerPort: {{.Values.WebUI.ContainerPort}}
+        env:
+        - name: REACT_APP_TEST_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.WebUI.ConfigName}}
+              key: is_test_mode
+        - name: REACT_APP_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.Global.SecretName}}
+              key: azure_app_id
+        - name: REACT_APP_TENANT
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.Global.SecretName}}
+              key: ad_tenant
+

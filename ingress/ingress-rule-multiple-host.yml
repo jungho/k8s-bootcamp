@@ -1,0 +1,30 @@
+# You can use nip.io dynamic dns service to define your host
+# See http://nip.io for details
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: pod-details-ingress-multi
+  namespace: ingress-example
+  annotations:
+    ingress.kubernetes.io/force-ssl-redirect: "false"
+spec:
+  rules:
+    #IP is not allowed so I use nip.io DNS service
+  - host: v1.192.168.99.100.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: pod-details-v1
+          servicePort: 8000
+  - host: v2.192.168.99.100.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: pod-details-v2
+          servicePort: 8000
+  #The service that will handle all other
+  #paths. e.g. return a 404 not found page.
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80

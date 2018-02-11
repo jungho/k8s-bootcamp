@@ -1,0 +1,53 @@
+---
+- name: Removing any pre-existing Sonar database.
+  become: yes
+  mysql_db:
+    name: "{{ sonar_mysql_database }}"
+    state: absent
+
+- name: Create a database for Sonar.
+  become: yes
+  mysql_db:
+    name: "{{ sonar_mysql_database }}"
+    state: present
+
+- name: Create a sonar user.
+  become: yes
+  mysql_user:
+    name: "{{ sonar_mysql_username }}"
+    host: "{{ item }}"
+    priv: "{{ sonar_mysql_database }}.*:ALL"
+    password: "{{ sonar_mysql_password }}"
+  with_items: "{{ sonar_mysql_allowed_hosts }}"
+
+- name: Add SonarQube repo
+  become: yes
+  get_url:
+    url: http://downloads.sourceforge.net/project/sonar-pkg/rpm/sonar.repo
+    dest: /etc/yum.repos.d/sonar.repo
+
+- name: Install latest SonarQube
+  become: yes
+  yum:
+    name: sonar
+    state: latest
+
+- name: Configure SonarQube JDBC settings for MySQL.
+  become: yes
+  lineinfile:
+    dest: /opt/sonar/conf/sonar.properties
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - regexp: "^sonar.jdbc.username"
+      line: "sonar.jdbc.username={{ sonar_mysql_username }}"
+    - regexp: "^sonar.jdbc.password"
+      line: "sonar.jdbc.password={{ sonar_mysql_password }}"
+    - regexp: "^sonar.jdbc.url"
+      line: "sonar.jdbc.url=jdbc:mysql://{{ sonar_mysql_host }}:{{ sonar_mysql_port }}/{{ sonar_mysql_database }}?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance"
+    - regexp: "^sonar.web.context"
+      line: "sonar.web.context={{ sonar_web_context }}"
+
+- name: Restart sonar service
+  become: yes
+  service: name=sonar state=restarted

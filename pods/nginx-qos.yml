@@ -1,0 +1,25 @@
+# This pod will have a QoS of Guaranteed. Because it specifies both cpu and memory
+# requests and limits AND they are the same.  See https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/
+#
+# Deploy the pod with 'kubectl create -f nginx-qos.yml'
+# Get pod details with 'kubectl get pod/nginx-qos --output=yaml' to see
+# the pod details.  Notice the qosClass value.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-qos
+  labels:
+    day1: nginx-pod
+spec:
+  containers:
+  - name: my-nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        memory: "200Mi"
+        cpu: "700m"
+      requests:
+        memory: "200Mi"
+        cpu: "700m"

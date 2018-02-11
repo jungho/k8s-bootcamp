@@ -1,0 +1,18 @@
+---
+- name: Install nginx web proxy
+  become: yes
+  yum:
+    name: nginx
+    state: present
+
+- name: Copy nginx configuration for Jenkins and SonarQube
+  become: yes
+  template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    backup: yes
+#  notify: restart nginx
+
+- name: Start nginx
+  become: yes
+  service: name=nginx state=started enabled=yes

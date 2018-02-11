@@ -1,0 +1,70 @@
+# Default values for Architech TechDemo.
+# This is a YAML-formatted file.
+# Declare name/value pairs to be passed into your templates.
+# name: value
+
+Global:
+  Version : 1.0
+  Environment: production
+  IsTesting: true
+  LogLevel: INFO
+  SecretName: todoapp-secrets
+  ImagePullPolicy: Always
+  Host: 192.168.99.100.nip.io
+
+WebUI:
+  Name: web-ui
+  ServiceName: todo-webui-service
+  Image: "architechbootcamp/todo-ui"
+  ImageTag: "latest"
+  Replicas: 1
+  ServicePort: 80
+  ContainerPort: 80
+  ConfigName: webui-config
+  Path: /
+
+TodoAPI:
+  Name: todo-api
+  ServiceName: todo-api
+  Image: "architechbootcamp/todo-api"
+  ImageTag: "latest"
+  Replicas: 1
+  ServicePort: 8080
+  ContainerPort: 8080
+  ConfigName: todoapi-config
+  Path: /api/todos
+
+UserAPI:
+  Name: user-api
+  ServiceName: user-api
+  Image: "architechbootcamp/user-api"
+  ImageTag: "latest"
+  Replicas: 1
+  ServicePort: 8082
+  ContainerPort: 8082
+  ConfigName: userapi-config
+  Path: /api/user
+
+MongoDb:
+  Name: mongodb
+  ServiceName: mongodb
+  Image: "mongo"
+  Replicas: 1
+  ServicePort: 27017
+  ContainerPort: 27017
+
+IngressNginx:
+  Name: nginx-ingress
+  ServiceName: nginx-ingress
+  Image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.10.2"
+  Replicas: 1
+  ServicePort: 80
+  ContainerPort: 80
+
+IngressDefaultBackend:
+  Name: default-http-backend
+  ServiceName: default-http-backend
+  Image: "gcr.io/google_containers/defaultbackend:1.4"
+  Replicas: 1
+  ServicePort: 80
+  ContainerPort: 8080

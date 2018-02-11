@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-api-config
+data:
+  db_url: mongodb://mongodb:27017
+  app_log_level: INFO
+  is_test_mode: "true"

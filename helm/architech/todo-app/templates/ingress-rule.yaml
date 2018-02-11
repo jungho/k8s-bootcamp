@@ -1,0 +1,30 @@
+# Note this example does not even specify a host.
+# Instead, it defines paths that direct the request to specific service.
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: todo-app-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: {{ .Values.Global.Host }}
+    http:
+      paths:
+      - path: {{ .Values.WebUI.Path }}
+        backend:
+          serviceName: {{ .Values.WebUI.ServiceName }}
+          servicePort: {{ .Values.WebUI.ServicePort }}
+      - path: {{ .Values.TodoAPI.Path }}
+        backend:
+          serviceName: {{ .Values.TodoAPI.ServiceName }}
+          servicePort: {{ .Values.TodoAPI.ServicePort }}
+      - path: {{ .Values.UserAPI.Path }}
+        backend:
+          serviceName: {{ .Values.UserAPI.ServiceName }}
+          servicePort: {{ .Values.UserAPI.ServicePort }}
+  #The service that will handle all other
+  #paths. e.g. return a 404 not found page.
+  backend:
+    serviceName: {{ .Values.IngressDefaultBackend.ServiceName }}
+    servicePort: {{ .Values.IngressDefaultBackend.ServicePort }}

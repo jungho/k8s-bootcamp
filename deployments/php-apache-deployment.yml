@@ -1,0 +1,46 @@
+# Based on the HPA walkthrough at k8s.io https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  php-apache
+spec:
+  selector:
+    run: php-apache
+  type:  LoadBalancer
+  ports:
+  - name:  http
+    port:  80
+    targetPort:  80
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: php-apache
+  labels:
+    run: php-apache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: php-apache
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        run: php-apache
+    spec:
+      containers:
+      - image: gcr.io/google_containers/hpa-example
+        imagePullPolicy: Always
+        name: php-apache
+        resources:
+          requests:
+            cpu: 200m
+            memory: 200Mi
+        ports:
+        - containerPort:  80

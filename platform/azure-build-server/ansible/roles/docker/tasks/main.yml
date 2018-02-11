@@ -1,0 +1,49 @@
+---
+- name: Uninstall old versions of docker
+  become: yes
+  yum:
+    name: '{{ item }}'
+    state: absent
+  with_items:
+    - docker
+    - docker-common
+    - docker-engine
+    - docker-selinux
+
+- name: Install latest docker dependencies
+  become: yes
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: Add docker repo
+  become: yes
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+
+- name: Install Docker
+  become: yes
+  yum:
+    name: docker-ce
+    state: present
+
+- name: Enable and start Docker service
+  become: yes
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Get Docker Compose
+  become: yes
+  shell: curl -L https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+
+- name: Set docker-compose as executable (adding +x)
+  become: yes
+  file:
+    dest: /usr/local/bin/docker-compose
+    mode: a+x

@@ -1,0 +1,22 @@
+# From the task at K8S.io https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
+# The cluster admin role would create PV resources.
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: task-pv-volume
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 10Gi
+  #only once process can read/write
+  accessModes:
+    - ReadWriteOnce
+  #when the PVC is released, retain the data.
+  #valid values are Retain (default), Recycle and Delete.
+  #Not all volume plugins support Recycle. See the volume plugin for details.
+  persistentVolumeReclaimPolicy: Retain
+  # hostPath volume type so the volume is mapped to a path on the node
+  hostPath:
+    path: "/tmp/data"

@@ -1,0 +1,18 @@
+.header{
+    padding: 35px 35px;
+    background-color: #2D7FC6;
+    color: #FFF;
+}
+
+.header h1{
+    margin: 0;
+}
+
+.current-user{
+    position: absolute;
+    right: 15px;
+    z-index: 10;
+    top: 41px;
+    cursor: pointer;
+    float: right;
+}

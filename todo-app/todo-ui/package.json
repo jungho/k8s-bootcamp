@@ -1,0 +1,45 @@
+{
+  "name": "todo-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "adal-vanilla": "^1.0.14",
+    "axios": "^0.17.1",
+    "bootstrap": "3",
+    "cross-fetch": "^1.1.1",
+    "express": "^4.16.2",
+    "js-cookie": "^2.2.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.19.2",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.17",
+    "react-select": "^1.1.0",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start && DEBUG=express:* && nodemon api-src/server.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "e2etest": "yarn run protractor --",
+    "protractor": "babel-node node_modules/.bin/protractor protractor-conf.js",
+    "eject": "react-scripts eject",
+    "webdriver": "webdriver-manager"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "chromedriver": "^2.34.1",
+    "jasmine-spec-reporter": "^4.2.1",
+    "nodemon": "^1.12.1",
+    "protractor": "^5.2.2",
+    "rimraf": "^2.6.2"
+  },
+  "proxy": "http://localhost"
+}

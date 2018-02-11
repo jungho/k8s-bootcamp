@@ -1,0 +1,297 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "adminUserName": {
+          "type": "string",
+          "metadata": {
+              "description": "Admin user name for all the VMs"
+          }
+      },
+      "publicSshKey": {
+          "type": "string",
+          "metadata": {
+              "description": "Public SSH key as a string for the initial user"
+          }
+      },
+      "storageAccountName": {
+          "type": "string",
+          "metadata": {
+              "description": "Name of the storage account on which the build server VM will run on."
+          }
+      },
+      "buildServerDnsPrefix": {
+          "type": "string",
+          "metadata": {
+              "description": "The DNS prefix to be part of the FQDN for the build server public IP address."
+          }
+      },
+      "vNetName": {
+          "type": "string",
+          "defaultValue": "buildServerVnet",
+          "metadata": {
+              "description": "Name of the virtual network"
+          }
+      },
+      "vNetAddressPrefix": {
+          "type": "string",
+          "defaultValue": "10.1.0.0/16",
+          "metadata": {
+              "description": "The IP Address pool for the virtual network in CIDR format."
+          }
+      },
+      "buildServerSubnetAddressPrefix": {
+          "type": "string",
+          "defaultValue": "10.1.1.0/24",
+          "metadata": {
+              "description": "The IP address pool for the build server subnet in CIDR format"
+          }
+      },
+      "buildServerVmSize": {
+          "type": "string",
+          "allowedValues": [
+              "Standard_A2_v2",
+              "Standard_A4_v2",
+              "Standard_A8_v2",
+              "Standard_D2_v3",
+              "Standard_D4_v3",
+              "Standard_D8_v3",
+              "Standard_D4_v2"
+          ],
+          "defaultValue": "Standard_D2_v3",
+          "metadata": {
+              "description": "Build server VM size to provision. See https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-sizes-specs"
+          }
+      }
+  },
+  "variables": {
+      "sshPublicKeyPath": "[concat('/home/',parameters('adminUserName'),'/.ssh/authorized_keys')]",
+      "appAvailabilitySetName": "appAvailabilitySet",
+      "buildServerSubnetName": "buildServerSubnet",
+      "buildServerNsgName": "[concat(variables('buildServerSubnetName'), '-nsg')]",
+      "vnetRef": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNetName'))]",
+      "buildServerPublicIpName": "buildServerPublicIp",
+      "buildServerVmName": "buildServerVm",
+      "buildServerNicName": "buildServerNic",
+      "buildServerPrivateIpAddress": "10.1.1.10",
+      "updateDomainCount": 5,
+      "faultDomainCount": 2,
+      "os": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "version": "latest",
+          "sku": "7.1"
+      },
+      "storageUriBase": "[concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/')]",
+      "vhdUriBase": "[concat(variables('storageUriBase'),'buildservervhds/')]"
+  },
+  "resources": [
+      {
+          "comments": "Availability set for the app VMs",
+          "type": "Microsoft.Compute/availabilitySets",
+          "name": "[variables('appAvailabilitySetName')]",
+          "apiVersion": "2017-03-30",
+          "location": "[resourceGroup().location]",
+          "properties": {
+              "platformUpdateDomainCount": "[variables('updateDomainCount')]",
+              "platformFaultDomainCount": "[variables('faultDomainCount')]"
+          }
+      },
+      {
+          "type": "Microsoft.Compute/virtualMachines",
+          "name": "[variables('buildServerVmName')]",
+          "apiVersion": "2017-03-30",
+          "location": "[resourceGroup().location]",
+          "properties": {
+              "hardwareProfile": {
+                  "vmSize": "[parameters('buildServerVmSize')]"
+              },
+              "storageProfile": {
+                  "imageReference": {
+                      "publisher": "[variables('os').publisher]",
+                      "offer": "[variables('os').offer]",
+                      "sku": "[variables('os').sku]",
+                      "version": "[variables('os').version]"
+                  },
+                  "osDisk": {
+                      "name": "[concat(variables('buildServerVmName'), '-OsDisk')]",
+                      "createOption": "FromImage",
+                      "vhd": {
+                          "uri": "[concat(variables('vhdUriBase'), variables('buildServerVmName'), '-OS.vhd')]"
+                      },
+                      "caching": "ReadWrite"
+                  }
+              },
+              "osProfile": {
+                  "computerName": "[concat(variables('buildServerVmName'))]",
+                  "adminUsername": "[parameters('adminUserName')]",
+                  "linuxConfiguration": {
+                      "disablePasswordAuthentication": true,
+                      "ssh": {
+                        "publicKeys": [
+                          {
+                            "path": "[variables('sshPublicKeyPath')]",
+                            "keyData": "[parameters('publicSshKey')]"
+                          }
+                        ]
+                      }
+                  }
+              },
+              "networkProfile": {
+                  "networkInterfaces": [
+                      {
+                          "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('buildServerNicName'))]"
+                      }
+                  ]
+              }
+          },
+          "dependsOn": [
+              "[resourceId('Microsoft.Network/networkInterfaces', variables('buildServerNicName'))]"
+          ]
+      },
+      {
+          "type": "Microsoft.Network/networkInterfaces",
+          "name": "[variables('buildServerNicName')]",
+          "apiVersion": "2017-06-01",
+          "location": "[resourceGroup().location]",
+          "properties": {
+              "ipConfigurations": [
+                  {
+                      "name": "ipconfig1",
+                      "properties": {
+                          "privateIPAllocationMethod": "Static",
+                          "privateIPAddress": "[variables('buildServerPrivateIpAddress')]",
+                          "publicIPAddress": {
+                              "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('buildServerPublicIpName'))]"
+                          },
+                          "subnet": {
+                              "id": "[concat(variables('vnetRef'), '/subnets/', variables('buildServerSubnetName'))]"
+                          }
+                      }
+                  }
+              ],
+              "dnsSettings": {
+                  "dnsServers": []
+              },
+              "enableIPForwarding": false,
+              "networkSecurityGroup": {
+                  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('buildServerNsgName'))]"
+              }
+          },
+          "resources": [],
+          "dependsOn": [
+              "[resourceId('Microsoft.Network/publicIPAddresses', variables('buildServerPublicIpName'))]",
+              "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNetName'))]",
+              "[resourceId('Microsoft.Network/networkSecurityGroups', variables('buildServerNsgName'))]"
+          ]
+      },
+      {
+          "type": "Microsoft.Network/networkSecurityGroups",
+          "name": "[variables('buildServerNsgName')]",
+          "apiVersion": "2017-06-01",
+          "location": "[resourceGroup().location]",
+          "properties": {
+              "securityRules": [
+                  {
+                      "name": "http-rule",
+                      "properties": {
+                          "protocol": "Tcp",
+                          "sourcePortRange": "*",
+                          "destinationPortRange": "80",
+                          "sourceAddressPrefix": "INTERNET",
+                          "destinationAddressPrefix": "*",
+                          "access": "Allow",
+                          "priority": 100,
+                          "direction": "Inbound"
+                      }
+                  },
+                  {
+                      "name": "https-rule",
+                      "properties": {
+                          "protocol": "Tcp",
+                          "sourcePortRange": "*",
+                          "destinationPortRange": "443",
+                          "sourceAddressPrefix": "INTERNET",
+                          "destinationAddressPrefix": "*",
+                          "access": "Allow",
+                          "priority": 200,
+                          "direction": "Inbound"
+                      }
+                  },
+                  {
+                      "name": "ssh-rule",
+                      "properties": {
+                          "protocol": "Tcp",
+                          "sourcePortRange": "*",
+                          "destinationPortRange": "22",
+                          "sourceAddressPrefix": "INTERNET",
+                          "destinationAddressPrefix": "*",
+                          "access": "Allow",
+                          "priority": 300,
+                          "direction": "Inbound"
+                      }
+                  },
+                  {
+                      "name": "jenkins-slave-rule",
+                      "properties": {
+                          "protocol": "Tcp",
+                          "sourcePortRange": "*",
+                          "destinationPortRange": "8888",
+                          "sourceAddressPrefix": "INTERNET",
+                          "destinationAddressPrefix": "*",
+                          "access": "Allow",
+                          "priority": 400,
+                          "direction": "Inbound"
+                      }
+                  }
+              ]
+          },
+          "resources": [],
+          "dependsOn": []
+      },
+      {
+          "comments": "The public IP address to access the build server.",
+          "type": "Microsoft.Network/publicIPAddresses",
+          "name": "[variables('buildServerPublicIpName')]",
+          "apiVersion": "2017-06-01",
+          "location": "[resourceGroup().location]",
+          "properties": {
+              "publicIPAllocationMethod": "Dynamic",
+              "idleTimeoutInMinutes": 4,
+              "dnsSettings": {
+                  "domainNameLabel": "[parameters('buildServerDnsPrefix')]"
+              }
+          },
+          "resources": [],
+          "dependsOn": []
+      },
+      {
+          "type": "Microsoft.Network/virtualNetworks",
+          "name": "[parameters('vNetName')]",
+          "apiVersion": "2017-06-01",
+          "location": "[resourceGroup().location]",
+          "properties": {
+              "addressSpace": {
+                  "addressPrefixes": [
+                      "[parameters('vNetAddressPrefix')]"
+                  ]
+              },
+              "subnets": [
+                  {
+                      "name": "[variables('buildServerSubnetName')]",
+                      "properties": {
+                          "addressPrefix": "[parameters('buildServerSubnetAddressPrefix')]",
+                          "networkSecurityGroup": {
+                              "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('buildServerNsgName'))]"
+                          }
+                      }
+                  }
+              ]
+          },
+          "resources": [],
+          "dependsOn": [
+              "[resourceId('Microsoft.Network/networkSecurityGroups', variables('buildServerNsgName'))]"
+          ]
+      }
+  ]
+}

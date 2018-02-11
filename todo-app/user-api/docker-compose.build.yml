@@ -1,0 +1,20 @@
+# Merge this file with docker-compose to build and run the user-api container
+# `docker-compose -f docker-compose.yml -f docker-compose.build.yml build --no-cache`
+# `docker-compose -f docker-compose.yml -f docker-compose.build.yml up`
+version: '3'
+services:
+  user-api:
+    build:
+      context: .
+    image: user-api
+    ports:
+      - '8082:8082'
+    environment:
+      MONGODB_URL: 'mongodb://user-api-mongodb:27017/user-api'
+      IS_TEST_MODE: '${IS_TEST_MODE}'
+      APP_LOG_LEVEL: '${APP_LOG_LEVEL}'
+      AZURE_APP_ID: '${AZURE_APP_ID}'
+      AZURE_IDENTITY_META_DATA: '${AZURE_IDENTITY_META_DATA}'
+      
+    depends_on:
+      - user-api-mongodb

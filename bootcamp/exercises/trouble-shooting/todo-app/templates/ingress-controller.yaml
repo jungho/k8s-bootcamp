@@ -1,0 +1,126 @@
+# We use the nginx ingress controller implementation located here.
+# https://github.com/kubernetes/ingress-nginx
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.IngressNginx.Name }}
+spec:
+  selector:
+    app: {{ .Values.IngressNginx.Name }}
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.IngressNginx.ServicePort }}
+      protocol: TCP
+      targetPort: {{ .Values.IngressNginx.ContainerPort }}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.IngressNginx.Name }}
+  labels:
+    app: {{ .Values.IngressNginx.Name }}
+spec:
+  replicas: {{ .Values.IngressNginx.Replicas }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.IngressNginx.Name }}
+    spec:
+      containers:
+      - image:  {{ .Values.IngressNginx.Image }}
+        name:  {{ .Values.IngressNginx.Name }}
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        ports:
+        - containerPort: {{ .Values.IngressNginx.ContainerPort }}
+        # The args and environment variables are required by
+        # this controller implementation
+        # See https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/cli-arguments.md
+        - containerPort: 10254
+        args:
+        # Note these args a specific to the ingress controller implementation
+        - /nginx-ingress-controller
+        - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
+        # This flag forces the ingress controller to only care about ingress resources
+        # in the namespace defined in --watch-namespace
+        # This enables you to isolate ingress controllers and ingress rules to a given namespace
+        - --force-namespace-isolation
+        - --watch-namespace=$(POD_NAMESPACE)
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.IngressDefaultBackend.ServiceName }}
+  labels:
+    app: {{ .Values.IngressDefaultBackend.Name }}
+spec:
+  ports:
+  - port: {{ .Values.IngressDefaultBackend.ServicePort }}
+    targetPort: {{ .Values.IngressDefaultBackend.ContainerPort }}
+  selector:
+    app: {{ .Values.IngressDefaultBackend.Name }}
+---
+# default backend from https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/default-backend.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.IngressDefaultBackend.Name }}
+  labels:
+    app: {{ .Values.IngressDefaultBackend.Name }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.IngressDefaultBackend.Name }}
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: {{ .Values.IngressDefaultBackend.Name }}
+        # Any image is permissable as long as:
+        # 1. It serves a 404 page at /
+        # 2. It serves 200 on a /healthz endpoint
+        image: {{ .Values.IngressDefaultBackend.Image }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        ports:
+        - containerPort: {{ .Values.IngressDefaultBackend.ContainerPort }}
+        resources:
+          limits:
+            cpu: 10m
+            memory: 20Mi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+---

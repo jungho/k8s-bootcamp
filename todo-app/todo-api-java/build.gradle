@@ -1,0 +1,62 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.9.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+group = 'ca.architech'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+ext {
+	azureVersion = '0.2.0'
+}
+
+dependencies {
+	compile('com.microsoft.azure:azure-active-directory-spring-boot-starter')
+	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.security.oauth:spring-security-oauth2')
+	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+	compile('org.springframework.boot:spring-boot-starter-data-rest')
+	compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.0')
+	compile('io.springfox:springfox-swagger2:2.7.0')
+	compile('io.springfox:springfox-swagger-ui:2.7.0')
+	compile('org.apache.logging.log4j:log4j-api')
+	compile('org.apache.logging.log4j:log4j-core')
+
+    compileOnly('org.projectlombok:lombok:1.16.16')
+
+	runtime('org.springframework.boot:spring-boot-devtools')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "com.microsoft.azure:azure-spring-boot-bom:${azureVersion}"
+	}
+}
+
+// Used to help improve performance when building the Docker image by separating the dependency download from the actual
+// build
+task getDependencies(type: Copy) {
+	from sourceSets.main.runtimeClasspath
+	from sourceSets.main.compileClasspath
+	from sourceSets.test.runtimeClasspath
+	from sourceSets.test.compileClasspath
+	into '.dependencies/'
+}

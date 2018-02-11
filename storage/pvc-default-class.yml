@@ -1,0 +1,24 @@
+#an example of a PVC that uses the default storageclass
+#Note that it does not specify a volumeName.  It also does not specify a storageClass, therefore,
+#if a default storageclass has been provisioned on the cluster, the volume will be dynamically
+#provisioned using the provisioner specified in the default storageclass.
+#
+#To see what storageclasses have been provisioned on your cluster run:
+#
+# kubectl get sc
+#
+# On minikube, I see this:
+#
+#NAME                 PROVISIONER
+#standard (default)   k8s.io/minikube-hostpath
+#
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-default-class
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi

@@ -1,0 +1,28 @@
+# This pod will only be scheduled to a node with the label 'disk=ssd'
+# See https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ for details
+
+# Try to deploy this pod using 'kubectl create -f nginx-scheduling.yml'
+# Get the pod details with 'kubectl get pod/nginx-example --output=yaml'
+# Notice that this pod was 'Unschedulable'.  This is because there are
+# no nodes with the label 'disk: ssd'.
+#
+# Add a label to one of your nodes with 'kubectl label node <node_name> disk=ssd'
+# You will see that the pod will be eventually be scheduled.
+#
+# Another means to influence scheduling of pods to nodes are node-affinity, inter-pod affinity/anti-affinity
+# These are beta features but much more flexible than nodeSelectors.
+# See https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-example
+  labels:
+    day1: nginx-pod
+spec:
+  containers:
+  - name: my-nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  nodeSelector:
+    disk: ssd

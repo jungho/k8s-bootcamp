@@ -1,0 +1,30 @@
+---
+- name: Download kubectl
+  become: yes
+  shell: curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
+- name: Make kubectl executable
+  become: yes
+  shell: chmod +x ./kubectl
+
+- name: Move kubectl executable
+  become: yes
+  shell: mv ./kubectl /usr/local/bin/kubectl
+
+- name: Create .kube config directory
+  become: yes
+  file:
+    path: /var/lib/jenkins/.kube
+    owner: jenkins
+    group: jenkins
+    state: directory
+    mode: 0755
+
+- name: Copy Azure ACS Kubernetes credentials to build server
+  become: yes
+  copy:
+    src: "~/.kube/{{ kube_config_file_name }}"
+    dest: /var/lib/jenkins/.kube/config
+    owner: jenkins
+    group: jenkins
+    backup: yes

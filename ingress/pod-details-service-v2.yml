@@ -1,0 +1,66 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name:  pod-details-v2
+spec:
+  selector:
+  # used to select the pods to route requests
+    app: v2
+  type:  ClusterIP
+  ports:
+  - name:  http
+    port:  8000
+    targetPort:  pod-port
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name:  pod-details-v2
+  labels:
+    app: v2
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: v2
+    spec:
+      containers:
+      - image:  architechbootcamp/pod-details:1.0.3
+        name:  pod-details-v2
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "55M"
+          limits:
+            cpu: "20m"
+            memory: "55M"
+        ports:
+        - containerPort:  8000
+          name:  pod-port
+        #Here we are setting environment variables within the container
+        #with values from the current state of the pod that is stored
+        #in etcd.  This is the information you recieve when you do 'kubectl describe ...'
+        env:
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName

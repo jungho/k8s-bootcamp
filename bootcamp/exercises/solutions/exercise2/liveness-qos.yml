@@ -1,0 +1,34 @@
+# Use the nginx image from Dropbox.  
+# The liveness probe path should be '/'.  Note, nginx listens on port 80.
+# Configure the probe to wait 5 seconds prior to the first probe.
+# Configure the probe to check every 10 seconds
+# Configure the probe to restart the pod after 3 failures
+# Configure the pod to have the Burstable QoS
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-qos
+  labels:
+    day1: nginx-pod
+spec:
+  containers:
+  - name: my-nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+    #notice the limits and requests are different?
+    #Hence it does not meet Guaranteed QoS.
+    resources:
+      limits:
+        memory: "400Mi" 
+        cpu: "700m"
+      requests:
+        memory: "200Mi"
+        cpu: "500m"
+    livenessProbe:
+      httpGet:
+        path: / 
+        port: 80 #change this to 8080 to make the livenessProbe fail
+      initialDelaySeconds: 5 #time to wait prior to first probe
+      periodSeconds: 10 #time to wait between probes
+      failureThreshold: 3 #number of failures before restarting

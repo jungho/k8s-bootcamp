@@ -1,0 +1,8 @@
+sonar_url: http://localhost:9000/sonar
+jenkins_sonar_token_name: JenkinsSonarToken
+
+sonar_connection_delay: 5
+sonar_connection_retries: 180
+
+jenkins_admin_username: admin
+jenkins_admin_password: admin

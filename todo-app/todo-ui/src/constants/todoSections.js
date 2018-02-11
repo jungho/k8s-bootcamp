@@ -1,0 +1,7 @@
+const TODO_SECTION = {
+  TODAY: 'TODAY',
+  PAST_DUE: 'PAST_DUE',
+  UPCOMING: 'UPCOMING',
+};
+
+export default TODO_SECTION

@@ -1,0 +1,125 @@
+/*
+ Required Plugins:
+  - Environment Injector Plugin
+   -- Add `GIT_BRANCH=some/branch` when testing pipeline script directly in Jenkins
+   -- Add `PROD_KUBECTL_CONTEXT=myContenxt` where 'mycontext' is the name of the kubectl context to access the production cluster
+ Required Credentials:
+  - `docker-hub-credentials` : Username and password for docker hub
+  - `scm-credentials` : SSH username (git) and private key to access git. Used when testing pipeline script directly in Jenkins
+ Required Jobs:
+  - `QA-Tests` : Job to execute tests on all components in a QA environment.
+ Required Parameters (under "This job is parameterized"):
+  - `CleanWorkspace` : Boolean. Default to unchecked.
+*/
+
+// Major.minor version
+PROJECT_VERSION = '1.0'
+PROJECT_IMAGE_NAME = 'architechbootcamp/todo-ui'
+PROJECT_PATH = 'todo-app/todo-ui'
+DEPLOYMENT_NAME = 'todo-ui'
+QA_NAMESPACE = 'qa-env'
+PROD_NAMESPACE = 'prod-env'
+REGISTRY_URL = 'https://registry.hub.docker.com'
+
+node {
+
+    def buildEnv;
+
+    stage('Checkout') {
+
+        if (params.CleanWorkspace) {
+            echo "Cleaning Workspace"
+            deleteDir()
+        }
+
+        echo "Checkout project"
+        // Checkout source from the same Git repo/branch this Jenkinsfile resides in.
+        checkout scm
+
+        // Checkout source from a specific Git repository
+//        git branch: "$GIT_BRANCH", credentialsId: 'scm-credentials', url: 'git@bitbucket.org:architech/k8s-fundamentals.git'
+        GIT_REVISION = sh (
+            script: 'git rev-parse --short HEAD',
+            returnStdout: true
+        ).trim()
+
+        GIT_REVISION_COUNT = sh (
+            script: 'git rev-list HEAD --count',
+            returnStdout:true
+        ).trim()
+
+        echo "Checked out git commit ${GIT_REVISION}"
+
+        // Desclare versions to use in tags later on.
+        PROJECT_VERSION = getAppVersion()
+
+        IMAGE_SEMVER = "${PROJECT_VERSION}.${GIT_REVISION_COUNT}"
+        IMAGE_FULL_VERSION = "${IMAGE_SEMVER}_${GIT_REVISION}"
+    }
+
+    stage('Build') {
+        echo "Building image ${PROJECT_IMAGE_NAME}"
+        buildEnv = docker.build(PROJECT_IMAGE_NAME,PROJECT_PATH)
+    }
+
+//    stage('Functional Test') {
+//        def projectName = "todoui${env.BUILD_NUMBER}"
+//
+//        try {
+//            echo "Building Testing container"
+//            sh "docker-compose -f $PROJECT_PATH/docker-compose.yml -f $PROJECT_PATH/docker-compose.test.yml -p $projectName build"
+//
+//            echo "Starting integration tests"
+//            sh "docker-compose -f $PROJECT_PATH/docker-compose.yml -f $PROJECT_PATH/docker-compose.test.yml -p $projectName run -e FAIL_TESTS=false todo-api-test"
+//        } finally {
+//            echo "Shutting down docker-compose environment"
+//            try {
+//                sh "docker-compose -f $PROJECT_PATH/docker-compose.yml -f $PROJECT_PATH/docker-compose.test.yml -p $projectName down"
+//            } catch (error) {
+//                echo "Error shutting down docker-compose: ${error}"
+//            }
+//        }
+//    }
+
+    stage('QA Image Push') {
+        echo "Pushing QA tags of image to docker registry"
+        docker.withRegistry("${REGISTRY_URL}", 'docker-hub-credentials') {
+            QA_IMAGE_FULL_VERSION = "qa_${IMAGE_FULL_VERSION}"
+            buildEnv.push(QA_IMAGE_FULL_VERSION)
+            buildEnv.push("qa_${IMAGE_SEMVER}")
+            buildEnv.push("qa_latest")
+        }
+    }
+
+    stage('QA Test') {
+        echo "Spawning Job to run functional testing on all components in QA environment"
+        build job: 'QA-Prod-Pipeline',
+            parameters:
+                [
+                        string(name: 'imageName', value: PROJECT_IMAGE_NAME),
+                        string(name: 'imageVersion', value: QA_IMAGE_FULL_VERSION),
+                        string(name: 'semVersion', value: IMAGE_SEMVER),
+                        string(name: 'deploymentName', value: DEPLOYMENT_NAME),
+                        string(name: 'projectPath', value: PROJECT_PATH)
+                ]
+
+    }
+}
+
+def deployImage(Map attrs) {
+    sh("/usr/local/bin/kubectl set image deployment/${DEPLOYMENT_NAME} ${DEPLOYMENT_NAME}=${PROJECT_IMAGE_NAME}:${attrs.imageTag} --namespace=${attrs.namespace}")
+}
+
+def getCurrentDeploymentVersion(String namespace) {
+    return sh(
+        script: "/usr/local/bin/kubectl get deployment/${DEPLOYMENT_NAME} --namespace=${namespace} -o wide | awk '{ if (NR!=1) {print \$8}}' | cut -d ':' -f 2",
+        returnStdout: true
+    ).trim()
+}
+
+def getAppVersion() {
+    return sh(
+        script: "cat ${PROJECT_PATH}/VERSION",
+        returnStdout: true
+    ).trim()
+}

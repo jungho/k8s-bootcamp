@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-adal": "^0.3.15"
+  }
+}

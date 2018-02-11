@@ -1,0 +1,14 @@
+version: '3'
+services:
+  user-api-mongodb:
+    image: mongo
+    ports:
+      - '27018:27017'
+    volumes:
+      - 'user-api-data:/data/db'
+      - 'user-api-config-data:/data/config'
+volumes:
+  user-api-data:
+    external: false
+  user-api-config-data:
+    external: false

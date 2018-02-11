@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: batch-job
+spec:
+  #this says run two jobs in parallel
+  parallelism: 2
+  #the number of retries before marking this job failed
+  backoffLimit: 2
+  #Completions defines the number of times you want the job to run successfully.
+  completions: 4
+  template:
+    metadata:
+      labels:
+        app: batch-job
+    spec:
+      #restartPolicy is be default Always but that does not make sense
+      #for Jobs so you must set this explicitly.
+      #If you need a job that run on a regular basis you a CronJob.
+      restartPolicy: OnFailure
+      containers:
+      - name: batch-job
+        image: ubuntu
+        command:
+        - bash
+        - -c
+        - i=0
+          while [ $i -lt 100 ]
+          do
+            echo "doing nothing..."
+            sleep 5
+            let i=i+1
+          done

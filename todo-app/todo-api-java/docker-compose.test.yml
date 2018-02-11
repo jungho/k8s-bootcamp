@@ -1,0 +1,24 @@
+# Merge this file with docker-compose to build and run the todo-api-test container
+# `docker-compose -f docker-compose.yml -f docker-compose.test.yml run todo-api-test`
+version: '3'
+services:
+  todo-api-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: todo-api-test
+    deploy:
+      restart_policy:
+        condition: none
+    environment:
+      MONGODB_URL: 'mongodb:27017'
+      SPRING_LOG_LEVEL: INFO
+      APP_LOG_LEVEL: DEBUG
+      ALLOWED_ORIGINS: '*'
+      AZURE_APP_ID: 'ADD APP ID HERE'
+      AZURE_CLIENT_SECRET: 'ADD AZURE CLIENT SECRET HERE'
+      USER_API_BASE_URL: 'http://user-api:8082'
+      IS_TEST_MODE: 'false'
+    depends_on:
+      - mongodb
+      - user-api

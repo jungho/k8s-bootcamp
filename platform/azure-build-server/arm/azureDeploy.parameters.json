@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "adminUserName": {
+          "value": "AZURE_VM_USERNAME"
+      },
+      "publicSshKey": {
+          "value": "PUBLIC_SSH_KEY"
+      },
+      "buildServerDnsPrefix": {
+          "value": "BUILD_SERVER_UNIQUE_DNS_PREFIX"
+      },
+      "storageAccountName": {
+          "value": "STORAGE_ACCOUNT_NAME"
+      }
+  }
+}

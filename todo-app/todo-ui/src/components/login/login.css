@@ -1,0 +1,18 @@
+.login {
+    position: fixed;
+    width: 30vw;
+    min-width: 320px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.panel{
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
+.login-container{
+    background-color: #2D7FC6;
+    width: 100vw;
+    height: 100vh;
+}

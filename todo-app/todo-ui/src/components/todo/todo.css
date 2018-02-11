@@ -1,0 +1,97 @@
+.todo-item{
+    border: 1px #ccc solid;
+    padding: 17px 0 17px 0;
+    margin-bottom: -1px;
+    cursor: pointer;
+}
+
+.description{
+    margin-left: 15px;
+}
+
+.done{
+    color: #aaa;
+}
+
+.done .description{
+    text-decoration: line-through;
+}
+
+.label{
+    margin-right: 5px;
+    padding: 0.5em .8em .5em;
+    font-size: 90%;
+    font-weight: 500;
+}
+
+.todo-action{
+    position: absolute;
+    top: 10px;
+    width: 50px;
+    right: -15px;
+    opacity: 0;
+}
+
+.todo-container:hover .todo-action{
+    transition: all .15s ease-out;
+    right: -45px;
+    opacity: 1;
+}
+
+.todo-delete{
+    margin: auto;
+}
+
+.date-container,
+.tag-container{
+    text-align: right;
+}
+
+button.todo-delete{
+    border-radius: 25px;
+    background-color: #9B9B9B;
+    color: #FFFFFF;
+    border-color: transparent;
+    font-size: 18px;
+    padding: 2px 8px;
+    width: 39px;
+}
+
+@media screen and (max-width: 767px) {
+
+    .todo-action{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        height: 70px;
+        /*right: 0;*/
+        top: 0;
+        opacity: 1;
+    }
+    .todo-container:hover .todo-action{
+        transition: none;
+        right: -15px;
+    }
+    .date-container,
+    .tag-container{
+        text-align: left;
+    }
+    .date-container,
+    .tag-container{
+        padding-top: 15px;
+    }
+    .todo-item{
+        overflow-x: scroll;
+    }
+
+    button.todo-delete{
+        border-radius: 25px;
+        background-color: #9B9B9B;
+        color: #FFFFFF;
+        border-color: transparent;
+        font-size: 18px;
+        padding: 2px 11px;
+        width: 39px;
+    }
+}

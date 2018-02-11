@@ -1,0 +1,67 @@
+---
+- name: Add jenkins user to docker group
+  become: yes
+  shell: "gpasswd -a jenkins docker"
+
+- name: Wait for SonarQube to start up before proceeding.
+  shell: "curl -u {{ jenkins_admin_username }}:{{ jenkins_admin_password }} -X GET --max-time {{ sonar_connection_delay }} http://localhost:9000/sonar/api/system/health"
+  register: result
+  until: (result.stdout.find("GREEN") != -1)
+  retries: "{{ sonar_connection_retries }}"
+  delay: "{{ sonar_connection_delay }}"
+  changed_when: false
+  check_mode: no
+
+- name: Check if SonarQube access token for Jenkins already axists
+  uri:
+    url: http://localhost:9000/sonar/api/user_tokens/search
+    method: GET
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
+    force_basic_auth: yes
+    return_content: yes
+  register: token_search_response
+
+- name: Generate SonarQube access token for Jenkins
+  uri:
+    url: http://localhost:9000/sonar/api/user_tokens/generate
+    method: POST
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
+    body: "name={{ jenkins_sonar_token_name }}"
+    force_basic_auth: yes
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+    return_content: yes
+  register: json_response
+  when: (token_search_response.content.find(jenkins_sonar_token_name) == -1)
+
+- name: Save SonarQube token to variable for Jenkins role
+  set_fact:
+    jenkins_sonar_token: (json_response.content|from_json)['token']
+  when: (token_search_response.content.find(jenkins_sonar_token_name) == -1)
+
+- name: Copy Jenkins configuration
+  become: yes
+  template:
+    src: config.xml.j2
+    dest: /var/lib/jenkins/config.xml
+    owner: jenkins
+    group: jenkins
+    backup: yes
+
+- name: Copy Jenkins Sonar plugin configuration
+  become: yes
+  template:
+    src: hudson.plugins.sonar.SonarGlobalConfiguration.xml.j2
+    dest: /var/lib/jenkins/hudson.plugins.sonar.SonarGlobalConfiguration.xml
+    owner: jenkins
+    group: jenkins
+    backup: yes
+
+- name: Restart jenkins
+  become: yes
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
