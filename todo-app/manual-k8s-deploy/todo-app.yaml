@@ -181,16 +181,6 @@ spec:
       containers:
       - name: user-api
         image: architechbootcamp/user-api:1.0.1
-        livenessProbe:
-          httpGet:
-            path: /api/user/healthcheck
-            port: 8082
-          initialDelaySeconds: 1
-        readinessProbe:
-          httpGet:
-            path: /api/user/is-ready
-            port: 8082
-          initialDelaySeconds: 1
         imagePullPolicy: Always
         ports:
         - containerPort: 8082

@@ -17,7 +17,7 @@ WebUI:
   ServiceName: todo-webui-service
   Image: "architechbootcamp/todo-ui"
   ImageTag: "latest"
-  Replicas: 1
+  Replicas: 2
   ServicePort: 80
   ContainerPort: 80
   ConfigName: webui-config
@@ -28,7 +28,7 @@ TodoAPI:
   ServiceName: todo-api
   Image: "architechbootcamp/todo-api"
   ImageTag: "latest"
-  Replicas: 1
+  Replicas: 2
   ServicePort: 8080
   ContainerPort: 8080
   ConfigName: todoapi-config
@@ -39,7 +39,7 @@ UserAPI:
   ServiceName: user-api
   Image: "architechbootcamp/user-api"
   ImageTag: "latest"
-  Replicas: 1
+  Replicas: 2
   ServicePort: 8082
   ContainerPort: 8082
   ConfigName: userapi-config
