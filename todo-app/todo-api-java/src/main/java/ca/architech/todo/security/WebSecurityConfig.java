@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/api/todos/healthcheck").permitAll();
+        http.authorizeRequests().antMatchers("/api/todos/is-ready").permitAll();
         http.authorizeRequests().antMatchers("/api/todos/**").authenticated();
 
         http.logout().logoutSuccessUrl("/").permitAll();

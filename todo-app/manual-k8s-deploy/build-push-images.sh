@@ -2,7 +2,7 @@ if [ "$#" -ne 2 ] ; then
   echo "Usage: $0 dockerhub-id version" >&2
   echo "assuming it is \"my maker\" id"
   docker_id="architechbootcamp"
-  version="v0.x"
+  version="1.0.1"
  else
   docker_id=$1
   version=$2

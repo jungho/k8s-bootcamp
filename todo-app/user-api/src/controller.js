@@ -45,6 +45,22 @@ router.get('/healthcheck', (req, res) => {
 
 /**
  * @swagger
+ * /user/is-ready:
+ *     get:
+ *         tags:
+ *             - Users
+ *         description: Used to check if the User API is ready
+ *         responses:
+ *             200:
+ *                 description: User API readiness check
+ */
+router.get('/is-ready', (req, res) => {
+    logger.info('Received a readiness request from K8S.');
+    res.sendStatus(HttpStatus.OK);
+});
+
+/**
+ * @swagger
  * /user/{email}:
  *     get:
  *         tags:
