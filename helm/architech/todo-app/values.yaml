@@ -13,8 +13,8 @@ Global:
   Host: 192.168.99.100.nip.io
 
 WebUI:
-  Name: todo-app-ui
-  ServiceName: todo-webui-service
+  Name: todo-ui
+  ServiceName: todo-ui
   Image: "architechbootcamp/todo-ui"
   ImageTag: "latest"
   Replicas: 2

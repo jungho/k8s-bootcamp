@@ -109,28 +109,28 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: todo-app-ui
+  name: todo-ui
 spec:
   type: LoadBalancer
   ports:
   - port: 80
     targetPort: 80
   selector:
-    app: todo-app-ui
+    app: todo-ui
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: todo-app-ui
+  name: todo-ui
 spec:
   replicas: 2
   template:
     metadata:
       labels:
-        app: todo-app-ui
+        app: todo-ui
     spec:
       containers:
-      - name: todo-app-ui
+      - name: todo-ui
         image: architechbootcamp/todo-ui:1.0.1
         imagePullPolicy: Always
         ports:

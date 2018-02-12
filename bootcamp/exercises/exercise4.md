@@ -31,19 +31,19 @@ Open up two shells.  In the first shell run the following command to update the 
 ```sh
 #we are setting the container image for the todo-api container to architechbootcamp/todo-api:1.0.1
 #See spec.containers.image field of the deployment manifest
-kubectl set image deployment/todo-app-ui todo-api=architechbootcamp/todo-app-ui:1.0.2
+kubectl set image deployment/todo-ui todo-api=architechbootcamp/todo-ui:1.0.2
 ```
 
 In the second shell we are going to watch the status of the rollout.
 
 ```sh
-kubectl rollout status deployment/todo-app-ui -n <namespace>
+kubectl rollout status deployment/todo-ui -n <namespace>
 ```
 
 Now let's rollback!
 
 ```sh
-kubectl rollout undo deployment/todo-app-ui -n <namespace>
+kubectl rollout undo deployment/todo-ui -n <namespace>
 ```
 
 ### Next... ###
