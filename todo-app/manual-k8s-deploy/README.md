@@ -30,6 +30,12 @@ todo-app-ui   LoadBalancer   10.0.114.41    52.235.45.69   80:32585/TCP   2m
 user-api      ClusterIP      10.0.144.252   <none>         8082/TCP       2m
 
 #open up a browser and go the IP:port for the todo-app-ui service.
+
+#access the K8S dashboard on AKS to see the deployed resources
+az aks browse -n <cluster-name> -g <resource-group>
+
+#on Minikube
+minikube dashboard
 ```
 
 Here is a description of what the script did.
