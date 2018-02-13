@@ -3,7 +3,7 @@
 For the Hackfest, you will be provided an Azure subscription that has all the necessary tooling installed as well as a dedicated AKS cluster.  Once you log into the Linux jumpbox, verify the versions,
 
 ```
-az version
+az --version
 kubectl version
 helm version
 ```
