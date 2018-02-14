@@ -29,22 +29,9 @@ spec:
         image: {{ .Values.MongoDb.Image }}
         ports:
         - containerPort: {{ .Values.MongoDb.ContainerPort }}
+        volumeMounts:
+        - name: data
+          mountPath: /data/db
       volumes:
       - name: data
-        persistentVolumeClaim:
-          claimName: {{ .Values.MongoDb.PVC }}
----
-#Note a default StorageClass needs to be available
-#On the cluster
-apiVersion:
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ .Values.MongoDb.PVC }}
-  labels:
-    environment: {{ .Values.Global.Environment }}
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 3Gi
+        emptyDir: {}
