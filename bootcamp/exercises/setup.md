@@ -3,7 +3,7 @@
 For the Hackfest, you will be provided an Azure subscription that has all the necessary tooling installed as well as a dedicated AKS cluster.  Once you log into the Linux jumpbox, verify the versions,
 
 ```
-az version
+az --version
 kubectl version
 helm version
 ```
@@ -31,7 +31,7 @@ minikube start --extra-config=apiserver.Authorization.Mode=RBAC
 
 # required to get the kube-dns and dashboard pods to run
 # See https://github.com/kubernetes/minikube/issues/1734
-kubectl create -f minikube-rbac-privileges.yaml
+kubectl create -f minikube-rbac-privileges.yml
 ```
 
 To stop minikube and bring down the cluster:
