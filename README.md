@@ -1,6 +1,6 @@
 # Kubernetes Bootcamp #
 
-**Note: This is a condensed version of our 2-day bootcamp tailored for the 1 day K8S Hackfest. To learn about our intensive 2 day K8S bootcamp, send us a note at info@architech.ca**
+**Note: This is a condensed version of our 2-day bootcamp tailored for the 1 day K8S Hackfest. To learn about our intensive 2 day K8S bootcamp, send us a note at kubernetes@architech.ca**
 
 [Kubernetes (K8S)](https://kubernetes.io/docs/home/) is the industry standard for deploying, managing, operating container based distributed applications.  It is proven in the most demanding production environments in the world.  Internet scale companies such as Google, Netflix, EBay and many more depend on Kubernetes to quickly deploy applications and bring product to market faster.
 
@@ -27,7 +27,7 @@ By the end of this bootcamp, you will learn the following K8S concepts:
 - [ConfigMaps - externalizing configuration from your applications](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/)
 - [Jobs](https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/)
 - [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
-- [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) 
+- [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
 - [Ingress and Ingress Controllers - key to controlling how requests originating from outside the cluster is routed to your services](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 - [RBAC - locking down your K8S environment](https://kubernetes.io/docs/admin/authorization/rbac/)
 - [Helm - packaging and deploying your application to K8S](https://docs.helm.sh/)
