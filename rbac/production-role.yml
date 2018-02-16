@@ -5,6 +5,13 @@ metadata:
   name: production-role
   namespace: production
 rules:
-- verbs: ["create", "delete", "update", "patch", "get", "list", "watch"]
+- verbs:
+  - "create"
+  - "delete"
+  - "update"
+  - "patch"
+  - "get"
+  - "list"
+  - "watch"
   apiGroups: ["*"]
   resources: ["*"]
