@@ -1,6 +1,6 @@
 # Monitoring and Log Aggregation #
 
-Monitoring and Log Aggregation, and the ability to visualize and analyze system data to respond quickly to issues is critical to system health and uptime.  There are many, many tools to help you with this in K8S. Here we will deploy two sets of tools that serves related but different purposes. 
+Monitoring and Log Aggregation, and the ability to visualize and analyze system data to respond quickly to issues is critical to system health and uptime.  There are many, many tools to help you with this in K8S. Here we will deploy two sets of tools that serves related but different purposes.
 
 - Prometheus + Grafana for metrics capture, alerting, visualization and analysis
 - Elasticsearch, Fluentd, Kibana (EFK)** for log aggregation, indexing, search, visualization and analysis
@@ -13,7 +13,39 @@ The second deals with your application and server logs, so we are dealing with t
 
 ## Operators ##
 
-We will be deploying the monitoring and logging stacks using [Operators](https://coreos.com/blog/introducing-operators.html).  Operators were defined by the [CoreOS](https://coreos.com/) team and they are essentially [Custom Resource Definitions](https://kubernetes.io/docs/concepts/api-extension/custom-resources/) and controllers to deploy and manage applications using K8S native approaches while encapsulating domain specific knowledge in CRDs. Custom Resource Defintions are a means for you to define your own resources in K8S and extend the API server recognize your resources!  Your controller then would watch the CRDs and take appropriate action.  Pretty cool yes??  Operators are a excellent example of how to leverage CRDs!!
+We will be deploying the monitoring and logging stacks using [Operators](https://coreos.com/blog/introducing-operators.html).  Operators were defined by the [CoreOS](https://coreos.com/) team and they are essentially [Custom Resource Definitions](https://kubernetes.io/docs/concepts/api-extension/custom-resources/) and controllers to deploy and manage applications using K8S native approaches while encapsulating domain specific knowledge in CRDs.
+
+Custom Resource Defintions are a means for you to define your own resources in K8S and extend the API server recognize your resources!  Your controller then would watch the CRDs and take appropriate action.  Pretty cool yes??  Operators are a excellent example of how to leverage CRDs!!
+
+### Prometheus Operator ###
+
+We will be using the helm chart published by CoreOS to deploy the operator.  CoreOS provides excellent docs [here](https://coreos.com/operators/prometheus/docs/latest/user-guides/getting-started.html).
+
+**Unfortunately, we cannot deploy this chart as is to AKS as AKS does not support RBAC.  Therefore, provision an ACS cluster to follow along with this example.**
+
+```sh
+#1.  Add the coreos helm repo to get the Prometheus Operator chart
+helm repo add coreos https://s3-eu-west-1.amazonaws.com/coreos-charts/stable/
+
+#2. We will deploy everything to the monitoring namespace
+kubectl create namespace monitoring
+
+#3 Install the helm chart
+helm install coreos/prometheus-operator --name prometheus-operator --namespace monitoring
+
+#4. Install the actual Prometheus and Grafana pods.
+helm install coreos/kube-prometheus --name kube-prometheus --set global.rbacEnable=true --namespace monitoring
+
+#5.  Take a look at what was installed
+kubectl get pods -n monitoring
+
+#6.  Port-forward to the Grafana dashboard
+kubectl port-forward $(kubectl get  pods --selector=app=kube-prometheus-grafana -n  monitoring --output=jsonpath="{.items..metadata.name}") -n monitoring  8888
+
+#7.  Open up a brower to http://localhost:8888 and you will see the Grafana dashboard.
+
+```
+
 
 ## References ##
 
