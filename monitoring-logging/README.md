@@ -46,6 +46,11 @@ kubectl port-forward $(kubectl get  pods --selector=app=kube-prometheus-grafana 
 
 ```
 
+### Elasticsearch + Kibana Operator ###
+
+WIP.
+
+This is simple deployment of Elasticsearch and Kibana to K8S.  You still have to deploy either fluentd or Logstash or FileBeats onto the nodes to extract the log files and forward to Elasticsearch.  Note, as Elasticsearch is quite resource intensive, it is highly recommended that you have dedicated nodes for ES.  You can do this by applying taints and tolerations to ensure only ES pods get scheduled to these nodes.  Filebeats or Fluentd then needs to be deployed as daemonsets onto the nodes from which you want to pull the log files.
 
 ## References ##
 
