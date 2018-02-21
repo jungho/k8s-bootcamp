@@ -42,7 +42,7 @@ kubectl get pods -n monitoring
 #6.  Port-forward to the Grafana dashboard
 kubectl port-forward $(kubectl get  pods --selector=app=kube-prometheus-grafana -n  monitoring --output=jsonpath="{.items..metadata.name}") -n monitoring  3000
 
-#7.  Open up a brower to http://localhost:8888 and you will see the Grafana dashboard.
+#7.  Open up a brower to http://localhost:3000 and you will see the Grafana dashboard.
 
 ```
 
