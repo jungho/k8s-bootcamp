@@ -2,7 +2,7 @@
 
 ## Pre-Requisites ##
 
-You should have successfully set up your environment as outlined in [Day1/setup](./setup.md), you done [exercise1](./exercise1.md)
+You should have successfully set up your environment as outlined in [README](./README.md), you done [exercise1](./exercise1.md)
 
 ## Objective ##
 
