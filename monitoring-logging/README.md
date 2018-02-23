@@ -1,6 +1,12 @@
 # Monitoring and Log Aggregation #
 
-Monitoring and Log Aggregation, and the ability to visualize and analyze system data to respond quickly to issues is critical to system health and uptime.  There are many, many tools to help you with this in K8S. Here we will deploy two sets of tools that serves related but different purposes.
+Monitoring and Log Aggregation, and the ability to visualize and analyze system data to reduce mean time to recover is critical to business operations.  There are many, many tools to help you with this in K8S and very likely the tools that you use today is fully supported.
+
+For instructions on how to monitor your K8S cluster using Azure OMS, see [Monitoring and Log aggregation with OMS](./oms/installing_oms.md).
+
+For instructions on how to use well established open-source tools that require a bit more set up, see below.
+
+Here we will deploy two sets of tools that serves related but different purposes.
 
 - Prometheus + Grafana for metrics capture, alerting, visualization and analysis
 - Elasticsearch, Fluentd, Kibana (EFK)** for log aggregation, indexing, search, visualization and analysis
