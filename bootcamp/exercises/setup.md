@@ -1,11 +1,62 @@
 # Setting up your environment #
 
-For the Hackfest, you will be provided an Azure subscription that has all the necessary tooling installed as well as a dedicated AKS cluster.  Once you log into the Linux jumpbox, verify the versions,
+For the Hackfest, you will be provided an Azure subscription that has all the necessary tooling installed but you will have to provision an AKS cluster.
 
-```
+1. Using your browser go to the Registration Site listed in your classroom.
+    * Please make sure you use a valid work email as it will not allow for commercial e-mail domains.
+        * ![SignUp](./images/signup.png)
+    * Once you select submit, **DO NOT CLOSE THE BROWSER**.
+    * On the Lab and Overview page, navigate to the Lab tab and then select Launch Lab
+        * ![Overview](./images/overview.png)
+        * ![Launch Lab](./images/launch.png)
+    * The Lab will begin to deploy. **DO NOT CLOSE THE BROWSER**. This will take some time but the needed credentials will be presented on the page when the provisioning is complete.
+        * ![Preparing Lab](./images/preparing.png)
+    * Your credentials will be emails to your signup email address as well as presented on the screen
+        * ![Credentials](./images/creds-email.png)
+
+2. Launch your RDP client of choice and enter the url of the jump-box provided for you. Use the AdminUsername and AdminPassword provided in your email
+    *  ![Jumpbox Credentials](./images/jumpboxinfo.png)
+    * It may take a minute or so at first launch to get the desktop to present. This is normal at first log in.
+
+3. Access Terminal verify
+    * Access the Terminal application on your VM desktop. Applications -> Favorites -> Terminal
+    * Verify az, kubectl, and helm are installed
+
+```sh
 az --version
 kubectl version
 helm version
+```
+
+4. Log in to your student Azure account via the az CLI
+    * Use ``az login`` to login to your lab Azure Account. You will be asked to visit ``https://aka.ms/devicelogin`` and use the provided code to authenticate. Use the credentials provided in your e-mail/Lab Provisioning page.
+        *    ![Azure Credentials](./images/azureinfo.png)
+    * The password is a onetime password and must be changed at first signing in.
+    * Your terminal windows will update with a JSON output of your subscription confirming the login has worked.
+
+5. Provision a AKS cluster using your first initial + last name + k8shackfest for the clustername
+
+```sh
+az aks create -n firstinitiallastname_k8shackfest -g <your resource group name> -c 2 -k "1.8.1" --generate-ssh-keys
+
+#list your AKS cluster
+az aks list -o table
+
+#The result will be a table with your AKS cluster name, location, ResourceGroup...
+Name         Location       ResourceGroup    KubernetesVersion    ProvisioningState
+-----------  -------------  ---------------  -------------------  -------------------
+aks-cluster  canadacentral  k8s-hackfest     1.8.1                Succeeded
+
+#Get credentials for your cluster so you can authenticate using kubectl
+az aks get-credentials -n <your cluster name> -g <your resource group name>
+
+#verify you can access the cluster
+kubectl get nodes
+
+#you should see something like this
+NAME                       STATUS    ROLES     AGE       VERSION
+aks-nodepool1-30106593-0   Ready     agent     28m       v1.8.1
+aks-nodepool1-30106593-1   Ready     agent     28m       v1.8.1
 ```
 
 ## Setting up Minikube ##
