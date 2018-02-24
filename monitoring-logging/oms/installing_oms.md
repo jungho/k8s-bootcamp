@@ -33,5 +33,5 @@ If you have a legacy application that logs to your own specific directory and it
 
 ## Reference ##
 
-- [OMS-Kubernetes](https://github.com/Microsoft/OMS-docker/tree/master/Kubernetes) 
+- [OMS-Kubernetes](https://github.com/Microsoft/OMS-docker/tree/master/Kubernetes). Note the instructions are for deploying to ACS but it will work with AKS
 
