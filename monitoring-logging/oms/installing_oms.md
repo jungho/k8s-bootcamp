@@ -10,7 +10,7 @@ Prior to executing the steps below, create a Log Analytics service in Azure Port
 #from within the oms directory execute this script below.  It will ask you for the OMS workspace ID and key.
 ./secret-gen.sh
 
-#the script will generate the omsagentsecret.yaml file.  Create the secret on your cluster usin this manifest.
+#the script will generate the omsagentsecret.yaml file.  Create the secret on your cluster using this manifest.
 kubectl create -f omsagentsecret.yaml
 
 #Now you can deploy the OMS agent.
