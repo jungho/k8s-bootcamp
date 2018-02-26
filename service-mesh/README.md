@@ -7,7 +7,9 @@
 To deploy the todo-app so that Conduit proxies requests to the todo-app pods:
 
 1. Install Conduit.  See the [Getting Started Guide](https://conduit.io/getting-started/)
-2. From within the [todo-app/manual-k8s-deploy](../todo-app/manual-k8s-deploy) directory, execute `./deploy-todo-app.sh [-n namespace] -c`.  If you do not specify a namespace, the default will be todo-app.  make sure you have created the namespace first.
+2. From within the [todo-app/manual-k8s-deploy](../todo-app/manual-k8s-deploy) directory, execute `./deploy-todo-app.sh [-n namespace] -c`.  
+
+If you do not specify a namespace, the default will be todo-app.  make sure you have created the namespace first.
 
 ## References ##
 
