@@ -59,7 +59,7 @@ aks-nodepool1-30106593-0   Ready     agent     28m       v1.8.1
 aks-nodepool1-30106593-1   Ready     agent     28m       v1.8.1
 
 #clone or download the github repo onto the jumpbox environment
-git clone git@github.com:jungho/k8s-bootcamp.git
+git clone https://github.com/jungho/k8s-bootcamp.git
 ```
 
 ## Setting up Minikube ##
