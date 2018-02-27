@@ -37,7 +37,7 @@ helm version
 5. Provision a AKS cluster using your first initial + last name + k8shackfest for the clustername
 
 ```sh
-az aks create -n firstinitiallastname_k8shackfest -g <your resource group name> -c 2 -k "1.8.1" --generate-ssh-keys
+az aks create -n firstinitiallastname-k8shackfest -g <your resource group name> -c 2 -k "1.8.1" --generate-ssh-keys
 
 #list your AKS cluster
 az aks list -o table
