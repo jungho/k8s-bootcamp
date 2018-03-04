@@ -2,6 +2,8 @@
 
 **Note: This is a condensed version of our 2-day bootcamp tailored for the 1 day K8S Hackfest. To learn about our intensive 2 day K8S bootcamp, send us a note at kubernetes@architech.ca**
 
+**Download the presentation for this bootcamp from --> http://bit.ly/2oOZeZc**
+
 [Kubernetes (K8S)](https://kubernetes.io/docs/home/) is the industry standard for deploying, managing, operating container based distributed applications.  It is proven in the most demanding production environments in the world.  Internet scale companies such as Google, Netflix, EBay and many more depend on Kubernetes to quickly deploy applications and bring product to market faster.
 
 In this bootcamp, we will cover all the essential concepts in Kubernetes. We will go through Kubernetes from the persective of two user personas.
