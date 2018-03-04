@@ -84,3 +84,8 @@ By the end of this bootcamp, you will learn the following K8S concepts:
 * [Borg, Omega and Kubernetes](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/44843.pdf)
 * [12 Factor Application Principles](https://12factor.net/)
 * [Kubernetes Case Studies](https://kubernetes.io/case-studies/)
+
+### Very Helpful Utilities ###
+
+* [kube-ps1 - displays your current K8S context and namespace in your shell prompt!](https://github.com/jonmosco/kube-ps1)
+* [kubens & kubectx - quickly set the working context/namespace!](https://github.com/ahmetb/kubectx)
