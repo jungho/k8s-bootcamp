@@ -2,7 +2,7 @@
 
 **Note: This is a condensed version of our 2-day bootcamp tailored for the 1 day K8S Hackfest. To learn about our intensive 2 day K8S bootcamp, send us a note at kubernetes@architech.ca**
 
-[Copyright (c) 2017, Architech. All rights reserved.](./COPYRIGHT.md)
+[Copyright (c) 2018, Architech. All rights reserved.](./COPYRIGHT.md)
 
 **Download the presentation for this bootcamp from --> http://bit.ly/2oOZeZc**
 
