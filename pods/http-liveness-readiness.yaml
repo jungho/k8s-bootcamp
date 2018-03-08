@@ -28,7 +28,7 @@ spec:
     args:
     - /server
     livenessProbe:
-      httpGet:
+      httpGet: 
         path: /healthz # Success if 200 <= status code <= 400 
         port: 8080
         httpHeaders:
@@ -36,6 +36,14 @@ spec:
           value: Awesome
       initialDelaySeconds: 3 #time to wait prior to first probe
       periodSeconds: 3 #time to wait between probes
+    #If the kubelet can connect to port 8080 then it deems this pod ready
+    # to accept requests.  You can specify readiness probes using httpGet 
+    # or exec also.
+    readinessProbe:
+      tcpSocket:
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 10
 
     # valid values are: Always (default), OnFailure (livenessProbe defined), Never
     # If Always, OnFailure, kubectl will retry with exponential backoff delay up 

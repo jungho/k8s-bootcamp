@@ -1,4 +1,4 @@
-#An example of a PVC that claims a specific PV using labels
+#An example of a PVC that claims a specific PV using volumeName and labels
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
