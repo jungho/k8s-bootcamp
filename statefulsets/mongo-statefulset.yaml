@@ -1,0 +1,39 @@
+
+#in K8S v1.9.x the apiVersion is apps/v1
+#v1.8.x the apiVersion is apps/v1beta2
+#v1.7.x the apiVersion is apps/v1beta1
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  serviceName: mongo
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: data #reference the volumeClaimTemplate below
+          mountPath: /data/db
+  #this is a key difference with statefulsets
+  #A unique volume will be attached to each pod
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      #If no storageClassName is provided the default storage class will be used
+      #storageClassName: "standard"  
+      resources:
+        requests:
+          storage: 5Gi

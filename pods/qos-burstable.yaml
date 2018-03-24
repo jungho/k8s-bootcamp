@@ -21,5 +21,5 @@ spec:
     resources:
       limits:
         memory: "200Mi"
-      request:
+      requests:
         memory: "100Mi"

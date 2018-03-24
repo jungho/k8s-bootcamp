@@ -9,17 +9,14 @@ A key capability of K8S is that it understands your "desired state" as defined i
 * Pause a deployment
 * Rollback a deployment
 
-A common question is what if you do not need replication?  You should still use deployments as you benefit from resilience, rollback, and [horizontal auto-scaling](./horizontal-pod-autoscaling.md) capabilities.
-
-Note, in previous versions of K8S, you interacted directly with ReplicationControllers and ReplicaSets to manage the replica count of your pods.  With Deployments, you no longer should deal directly with ReplicaSets,in fact, Deployments manages the ReplicaSets for you.
-
 A lot goes on behind the scenes with Deployments.  See the following excellent diagram from the ["Kubernetes in Action"](https://www.manning.com/books/kubernetes-in-action) book by Manning.
 
 ![Deployment flow](./deployments.jpeg)
+A common question is what if you do not need replication?  You should still use deployments as you benefit from resilience, rollback, and [horizontal auto-scaling](./horizontal-pod-autoscaling.md) capabilities.
 
-Also take look at this excellent overview of all the events that occur end-to-end when you create a deployment - from invoking kubectl to the fully deployed pods. https://github.com/jamiehannaford/what-happens-when-k8s
+Note, in previous versions of K8S, you interacted directly with ReplicationControllers and ReplicaSets to manage the replica count of your pods.  With Deployments, you no longer should deal directly with ReplicaSets, in fact, Deployments manages the ReplicaSets for you.
 
-See [Exercise 4](../bootcamp/exercises/exercise4.md) for deployment examples.
+See [Exercise 1](../bootcamp/exercises/exercise1.md) for deployment examples.
 
 ## References ##
 

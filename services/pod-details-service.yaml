@@ -1,0 +1,93 @@
+# This service will provide access to all pods with the label 'app=pod-details'
+# It will listen on port 8080 and route requests to a named port called 'pod-port'
+# That named port is defined in the pod template.
+# This example also has a deployment through which we create 5 replicas of the pod-details pods
+#
+# Deploy using 'kubectl create -f pod-details-service.yml'
+# Get the service 'kubectl get service/pod-details'
+# You will see that the external IP is 'pending'.  
+# Wait until the external IP and port is provided.  
+# run curl http://ip:port/pod-details and you will see details of the pod that fulfilled the request.
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  pod-details
+spec:
+  selector:
+  # used to select the pods to route requests
+    app: pod-details
+  #
+  # Here we are exposing the service through a LoadBalancer.
+  #
+  # If the value was ClusterIP, this service would only be accessible within
+  # the cluster.  However, in our case, we want to expose to clients external to
+  # the cluster. We can use NodePort or LoadBalancer.
+  #
+  # With LoadBalancer, the cloud provider will provision a load balancer and route traffic
+  # to the nodes to a specific node and port (e.g. NodePort).  K8S knows that any
+  # request to that port to any node in the cluster is to the pod-details service
+  # and the request will be routed to the service, which in turn routes it to a pod.
+  #
+  # You would use a NodePort if you want to provision your own load balancer.
+  #  
+  # See details here - https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types
+  type:  LoadBalancer 
+  ports:
+  - name:  http
+    port:  8080
+    targetPort:  pod-port
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name:  pod-details
+  labels:
+    app: pod-details
+spec:
+  replicas: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: pod-details 
+    spec:
+      containers:
+      - image:  architechbootcamp/pod-details:1.0.0
+        name:  pod-details
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "55M"
+          limits:
+            cpu: "20m"
+            memory: "55M"
+        ports:
+        - containerPort:  8000
+          name:  pod-port
+        #Here we are setting environment variables within the container
+        #with values from the current state of the pod that is stored
+        #in etcd.  This is the information you recieve when you do 'kubectl describe ...'
+        env:
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName   
+      

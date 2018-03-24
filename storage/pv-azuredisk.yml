@@ -1,0 +1,24 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-azuredisk
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  #when the PVC is released, retain the data.
+  #valid values are Retain (default), Recycle and Delete.
+  #Not all volume plugins support Recycle. See the volume plugin for details.
+  persistentVolumeReclaimPolicy: Retain
+  # See https://github.com/kubernetes/examples/tree/master/staging/volumes/azure_disk
+  azureDisk:
+    diskName: [name of vhd]
+    diskURI:  [URI to vhd]
+  #mountOptions are supported only on certain volume types
+  #See https://kubernetes.io/docs/concepts/storage/persistent-volumes/#mount-options
+  mountOptions:
+  - dir_mode=0760
+  - file_mode=0760
+  - uid=1000
+  - gid=1000

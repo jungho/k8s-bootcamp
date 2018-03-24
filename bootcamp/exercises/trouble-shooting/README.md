@@ -14,6 +14,9 @@ kubectl logs <pod-name>
 #If the pod has multiple containers and you want the log for a specific container
 kubectl logs <pod-name> -c <container-name>
 
+#Use kubectl describe
+kubectl describe <pod-name>
+
 #look at the event stream in another terminal window as you deploy the application
 #Each of the controllers will raise events as they take their action
 kubectl get events
@@ -38,6 +41,9 @@ kubectl create namespace troubleshooting
 #deploy the helm chart
 helm --namespace trouble-shooting install todo-app
 
+```
+
 ## Some more good tips for Azure ##
 
-[Debugging K8S on Azure](https://github.com/andyzhangx/Demo/blob/master/debug/README.md)
+- [Debugging K8S on Azure](https://github.com/andyzhangx/Demo/blob/master/debug/README.md)
+- [K8S Explorer - Very helpful tool that is deployed as a pod to introspect your K8S environment](https://github.com/kubernetes/kubernetes/tree/release-1.5/examples/explorer)

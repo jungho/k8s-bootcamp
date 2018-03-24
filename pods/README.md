@@ -34,6 +34,16 @@ If and when you should define liveness and readiness probes depends on the conta
 
 * [Example configuring liveness and readiness probes](./http-liveness-readiness.yaml)
 
+## Running as Non-Root ##
+
+Part of safe and secure docker practices is running as non-root.  Far too many containers in production are running as privileged users when there is no need to, and as a result dramatically increases the security exposure of your system.   There are multiple ways to not run as a privileged user:
+
+* When creating your images, use the Docker USER instruction to set the user/group to run as
+* set the securityContext for your container in the Pod template
+
+See [busybox-root.yaml](./busybox-root.yaml) and [busybox-non-root.yaml](./busybox-non-root.yaml) for examples.
+
+
 ## Note ##
 
 It is important to note that you will rarely define pod manifests directly except in the most simple cases.  You will work with other resources such as Deployments, StatefulSets, DaemonSets that control the deployment, scaling, and lifecycle of your pods.  When you define your pod specifications you will do so as 'templates' within the manifests for those resources.

@@ -8,7 +8,7 @@ You should have successfully set up your environment as outlined in [README](./R
 
 In this exercise you are going to be deploy a pod and expose it as a service.
 
-### Deploy a Pod and expose it as a LoadBalanced Service in AKS ###
+### Deploy a Pod and expose it as a LoadBalanced Service in ACS ###
 
 * Create a docker image with contains simple HTTP service that returns a random number and today's date.  You can use any technology you wish.
 * Tag the image and push it to DockerHub or Azure Container Service
@@ -20,7 +20,3 @@ In this exercise you are going to be deploy a pod and expose it as a service.
 * Tag the image and push it to DockerHub or Azure Container Service
 * Deploy to K8S and test through a browser or curl
 * Bonus: Implement your service so that you can pass any stock symbol as query string parameter.
-
-### Next... ###
-
-[Exercise 4](./exercise4.md)

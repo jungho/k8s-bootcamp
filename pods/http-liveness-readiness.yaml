@@ -3,7 +3,7 @@
 # There are different way to implement a liveness probe.  
 # exec (executing a command within the container), tcp and http
 #
-# Deploy the pod with 'kubectl create -f http-liveness.yml'
+# Deploy the pod with 'kubectl create -f http-liveness-readiness.yaml'
 # Get status with 'kubectl get pod/liveness-http' -w  //the -w is for 'watch'
 # Notice that is seems to be restarting.
 # Get details with 'kubectl describe pod/liveness-http' to see what is going on.

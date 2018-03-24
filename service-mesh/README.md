@@ -11,6 +11,8 @@ To deploy the todo-app so that Conduit proxies requests to the todo-app pods:
 
 If you do not specify a namespace, the default will be todo-app.  make sure you have created the namespace first.
 
+After you have deployed the application with conduit, execute `conduit dashboard` to access the conduit dashboard and view which pods have been instrumented by Conduit.
+
 ## References ##
 
 - [Linkerd service-mesh](https://linkerd.io)

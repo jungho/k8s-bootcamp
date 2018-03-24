@@ -1,0 +1,21 @@
+# From https://docs.bitnami.com/kubernetes/how-to/secure-kubernetes-cluster-psp/#case-1-prevent-pods-from-running-with-root-privileges
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: restrict-root
+spec:
+  privileged: false
+  runAsUser:
+    rule: MustRunAsNonRoot
+  #SELinux must be enabled on the nodes
+  seLinux:
+    rule: RunAsAny
+  #The allowable GID that can be set by the pod/container to access a volume
+  fsGroup:
+    rule: RunAsAny
+  #The additional GID that can be set by the pod/container
+  supplementalGroups:
+    rule: RunAsAny
+  #what types of volumes that are allowed
+  volumes:
+  - '*'

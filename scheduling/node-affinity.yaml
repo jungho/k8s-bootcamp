@@ -1,0 +1,54 @@
+# 1.  Add the label role=web to one of the nodes
+#
+#   kubectl label nodes <node-name> role=web
+#
+# 2. Deploy this manifest and check which nodes the pods are deployed.
+# 
+#   kubectl create -f node-affinity.yaml
+# 
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-node-affinity
+  labels:
+    run: nginx-node-affinity
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: nginx-node-affinity
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        run: nginx-node-affinity
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          #You can have multiple nodeSelectorTerms.  The pod will be scheduled to a
+          #node if one of the nodeSelectorTerms are satisfied.
+            nodeSelectorTerms:
+            #you can have multiple matchExpressions
+            #The pod will be scheduled to a node only if ALL matchExpressions can be satisfied.
+            - matchExpressions:
+              - key: role
+                operator: In #valid values are: In, NotIn, Exists, DoesNotExist, Gt, Lt
+                values:
+                - web    
+          #The node that is most preferred is the one with the greatest sum of weights
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: role
+                operator: In
+                values:
+                - web      
+      containers:
+      - name: nginx-node-affinity
+        image: nginx

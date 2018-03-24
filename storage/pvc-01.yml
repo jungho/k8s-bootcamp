@@ -1,0 +1,12 @@
+#An example of a PVC that claims a specific PV using volumeName and labels
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pv-claim-01
+spec:
+  volumeName: pv-volume
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

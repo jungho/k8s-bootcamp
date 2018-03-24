@@ -1,0 +1,14 @@
+#Resource quota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mem-cpu-demo
+spec:
+  hard:
+# See https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+# for explanation of the units used for cpu/memory.  A more detailed explanation is here:  
+# https://blog.digilentinc.com/mib-vs-mb-whats-the-difference/  
+    requests.cpu: "1"
+    requests.memory: 1Gi
+    limits.cpu: "2"
+    limits.memory: 2Gi

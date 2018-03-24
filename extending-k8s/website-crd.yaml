@@ -1,0 +1,23 @@
+# From Kubernetes in Action by Manning.  See Chapter 18.1
+# Unfortunately, the kubectl explain does not yet provide details of this resource
+# Therefore, you need to go directly to the API Reference
+# https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.9/#customresourcedefinition-v1beta1-apiextensions
+
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  #the name must be the plural form + api group
+  name: websites.extensions.example.com
+spec:
+  # Can be namespaced or cluster scope
+  scope: Namespaced 
+  #All resources have a version and are part of an api group
+  group: extensions.example.com  
+  version: v1
+  # The names of the resource when using kubectl
+  names:
+    kind: Website
+    singular: website
+    plural: websites
+    shortNames: ['ws']
+    

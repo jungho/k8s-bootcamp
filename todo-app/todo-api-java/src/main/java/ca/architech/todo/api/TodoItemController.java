@@ -43,14 +43,6 @@ public class TodoItemController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/is-ready")
-    @ApiOperation(value = "Used to check if the Todo API is ready")
-    @ApiResponse(code = 200, message = "API is running")
-    public ResponseEntity<HttpStatus> isReady() {
-        logger.info("Received a readiness request from K8S.");
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @GetMapping()
     @ApiOperation(value = "Returns the Todo items of the current user", response = TodoItem.class, responseContainer = "List")
     @ApiResponses({

@@ -1,0 +1,29 @@
+#When the main container starts up, it does a GET http://localhost:8001/apis/extensions.example.com/v1/websites?watch=true
+#to watch for Website resources.  When a Website resource is created, it will create a Deployment and Service resource 
+#to deploy a simple website and expose it as a NodePort service.
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: website-controller
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name:
+        website-controller
+      labels:
+        app: website-controller
+    spec:
+      #The controller executes as a serviceAccount with the cluster-admin role.
+      #A secret will be mounted onto the containers with the certificates to access
+      #the kube-apiserver.  This is required so the kubectl proxy can authenticate
+      #with the kube-apiserver.
+      serviceAccountName: website-controller
+      containers:
+        #The controller container.
+      - name: main
+        image: luksa/website-controller
+        #The kubectl proxy container.  The controller needs to access the kube-apiserver
+        #To make it simple, it will proxy through to the api-server using kubectl
+      - name: proxy
+        image: luksa/kubectl-proxy:1.6.2

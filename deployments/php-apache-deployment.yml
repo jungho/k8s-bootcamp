@@ -13,7 +13,8 @@ spec:
     port:  80
     targetPort:  80
 ---
-apiVersion: apps/v1beta2
+#apiVersion: apps/v1 #v1.9.x
+apiVersion: extensions/v1beta1 #v1.8.x
 kind: Deployment
 metadata:
   name: php-apache
@@ -21,13 +22,18 @@ metadata:
     run: php-apache
 spec:
   replicas: 1
+  #if you want this deployment to manage existing replicasets
+  #specify a selector to match the labels on the existing replicasets
+  #this is now required in later api-versions
   selector:
     matchLabels:
       run: php-apache
   strategy:
     type: RollingUpdate
     rollingUpdate:
+      #the maximum number of pods that can be created above the total desired number during rollout
       maxSurge: 1
+      #the maximum number of pods that is unavailable during the rollout
       maxUnavailable: 1
   template:
     metadata:

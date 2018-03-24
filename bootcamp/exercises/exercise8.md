@@ -1,4 +1,4 @@
-# Exercise 8 #
+# Exercise 9 #
 
 ## Pre-Requisites ##
 
@@ -6,9 +6,4 @@ You should have successfully set up your environment as outlined in [README](./R
 
 ## Objective ##
 
-Deploy the todo-app using Helm.  See [helm/README](../../helm/README.md).
-
-## Advanced ##
-
-Deploy the istio service mesh using helm.  Verify the deployment succeeded then open up a proxy to the Grafana dashboard and access it using your browser.
-See [deploying istio](../../helm/deploying-istio.md) for instructions.
+Create your own DockerHub registry with private access.  Push the images for the Todo-app to that registry.  Update the resource manifests to use imagePullSecrets to pull the images from your private registry.

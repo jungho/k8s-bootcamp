@@ -2,7 +2,7 @@
 
 This script provisions a Kubernetes cluster on Azure using ACS
 
-## Pre-requisited ##
+## Pre-requisites ##
 
 - The following CLI tools are required:
   - `az` - Azure CLI 2.0 tool (v2.0.21 or greater)

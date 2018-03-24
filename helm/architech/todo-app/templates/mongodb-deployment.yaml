@@ -35,21 +35,3 @@ spec:
       volumes:
       - name: data
         emptyDir: {}
-#comment emptyDir above
-#and uncomment the lines below to use PVCs and dynamic volume provisioning
-#BECAREFUL about the spacing!
-#What happens if you set the replica count > 1?
-
-#        persistentVolumeClaim:
-#          claimName: mongo-pvc
----
-#kind: PersistentVolumeClaim
-#apiVersion: v1
-#metadata:
-#  name: mongo-pvc
-#spec:
-#  accessModes:
-#  - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 3Gi

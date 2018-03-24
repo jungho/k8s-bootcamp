@@ -1,0 +1,16 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: db-access
+spec:
+  #This policy applies to those pods with label 'service=database'
+  podSelector:
+    matchLabels:
+      service: 'database'
+  #This is the ingress rule.  It will only allow ingress from those
+  #pods that have the label 'access=true'
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          access: 'true'

@@ -14,20 +14,21 @@ spec:
       labels:
         app: batch-job
     spec:
-      #restartPolicy is be default Always but that does not make sense
+      #restartPolicy is by default Always but that does not make sense
       #for Jobs so you must set this explicitly.
-      #If you need a job that run on a regular basis you a CronJob.
+      #If you need a job that run on a regular basis use a CronJob.
       restartPolicy: OnFailure
       containers:
       - name: batch-job
-        image: ubuntu
+        image: alpine
         command:
-        - bash
+        - sh
         - -c
-        - i=0
-          while [ $i -lt 100 ]
-          do
-            echo "doing nothing..."
-            sleep 5
-            let i=i+1
-          done
+        - |
+            i=0
+            while [ $i -lt 30 ]
+            do
+              echo "doing nothing..."
+              sleep 3
+              let i=i+1
+            done

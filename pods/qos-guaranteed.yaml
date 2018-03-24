@@ -6,7 +6,8 @@
 # the pod details.  Notice the qosClass value.
 #
 # See https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-# for explanation of the units used for cpu/memory
+# for explanation of the units used for cpu/memory.  A more detailed explanation is here:  
+# https://blog.digilentinc.com/mib-vs-mb-whats-the-difference/
 
 apiVersion: v1
 kind: Pod

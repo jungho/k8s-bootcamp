@@ -2,7 +2,7 @@
 
 ## Pre-Requisites ##
 
-You should have successfully set up your environment as outlined in [README](./README.md)
+You should have successfully set up your environment as outlined in [Day1/setup](./README.md)
 
 ## Objective ##
 

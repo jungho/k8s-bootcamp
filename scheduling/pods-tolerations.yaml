@@ -1,0 +1,113 @@
+# 1. create a cluster with two nodes
+# 2. add a taint to one of the worker nodes: 
+#   
+#  kubectl taint nodes <node-name> dedicated=nginx:NoSchedule
+# 
+# 3. Get the nodes with the taints:
+#   
+#  kubectl get nodes -o go-template-file="./taints.tmpl"
+#
+# 4. Deploy the pods: kubectl create -f pods-tolerations.yaml
+# 
+# 5. Get the pods.  Notice to which nodes the pods were scheduled.
+#
+# kubectl get pods -o wide
+#
+# 6.  Add the following taint and observe what happens.
+# 
+# kubetcl taint nodes <node-name> dedicated=nginx:NoExecute
+# 
+
+# apiVersion: apps/v1 #v1.9.*
+apiVersion: extensions/v1beta1 #v1.8.*
+kind: Deployment
+metadata:
+  name: nginx-schedule-execute
+  labels:
+    run: nginx-schedule-execute
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: nginx-schedule-execute
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        run: nginx-schedule-execute 
+    spec:
+      containers:
+      - name: nginx-schedule-execute
+        image: nginx
+      tolerations:
+      #this says tolerate taints where the value for the 
+      #key 'dedicated' is equal to 'nginx' AND effect is NoSchedule
+      - key: "dedicated"
+        operator: "Equal" 
+        value: "nginx"
+        effect: "NoSchedule"
+      #this says, tolerate taints where a key 'dedicated' exists AND effect is
+      #NoExecute.  Any pod that is scheduled to the node with the taint and does not
+      #have a matching toleration will be evicted immediately.
+      - key: "dedicated"
+        operator: "Exists"
+        effect: "NoExecute"
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-schedule
+  labels:
+    run: nginx-schedule
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: nginx-schedule
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        run: nginx-schedule
+    spec:
+      containers:
+      - name: nginx-schedule
+        image: nginx
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal" 
+        value: "nginx"
+        effect: "NoSchedule"
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-no-tolerations
+  labels:
+    run: nginx-no-tolerations
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: nginx-no-tolerations
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        run: nginx-no-tolerations
+    spec:
+      containers:
+      - name: nginx-no-tolerations
+        image: nginx

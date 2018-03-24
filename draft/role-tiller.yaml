@@ -1,0 +1,19 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: tiller-manager
+  namespace: default
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: kube-system
+  name: tiller-manager
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["configmaps"]
+  verbs: ["*"]

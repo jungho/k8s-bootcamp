@@ -1,0 +1,31 @@
+# 1) Deploy the pod
+# 
+# kubectl create -f busybox-root.yaml
+# 
+# 2) Access the shell
+#
+# kubectl exec -ti busybox-0 -- sh
+#
+# 3) from the shell run:
+# 
+# id -u `whoami`
+#
+# 4) uncomment the sections below and redeploy:
+#
+# kubectl apply -f busybox-root.yaml
+#
+# What happens? 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-0
+spec:
+  containers:
+  - name: busybox-0
+    image: busybox
+    command:
+    - 'sleep' 
+    - '10000'
+    #securityContext:
+    #  runAsNonRoot: true

@@ -10,7 +10,7 @@ echo "Creating Storage Class prometheusstorage"
 kubectl apply -f prometheus_hdd.yaml
 
 echo "First upgrading tiller on ACS"
-helm init --upgrade
+helm init --upgrade --wait
 
 echo " Installing Prometheus & Grafana namespace $namespace "
 
