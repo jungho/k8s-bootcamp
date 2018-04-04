@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: gremlin
+  namespace: default
+  labels:
+    k8s-app: gremlin
+    version: v1
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: gremlin
+        version: v1
+    spec:
+      containers:
+      - name: gremlin
+        image: gremlin/gremlin
+        args: [ "daemon" ]
+        imagePullPolicy: Always
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+              - SYS_BOOT
+              - SYS_TIME
+              - KILL
+        env:
+          - name: GREMLIN_ORG_ID
+            valueFrom:
+              secretKeyRef:
+                name: gremlin-secrets
+                key: ORG_ID
+          - name: GREMLIN_ORG_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: gremlin-secrets
+                key: ORG_SECRET
+          - name: GREMLIN_IDENTIFIER
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock

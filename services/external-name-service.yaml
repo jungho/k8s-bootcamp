@@ -1,0 +1,87 @@
+# This example exposes a REST service that is external to the cluster
+# to the pods within the cluster.  Notice, there are no label selectors.  In this
+# case we use the type ExternalName and provide the URI to the external service
+# in the externalName field.  The pods would just look up the service
+# just like any service - using the service name. See the source code of the API 
+# in the random-quote-api directory.
+# 
+# 1. Deploy the service and deployment.
+#
+#  kubectl create -f external-name-service.yml'
+# 
+# 2. Deploy busybox
+# 
+#  kubectl run buzybox --image busybox -- sleep 100000
+# 
+# 3. Get the name of the busybox pod and get access to its shell
+#
+#  kubectl get pods 
+#  kubectl exec -ti busybox-pod-name -- sh
+#
+# 4. From the shell run: 
+# 
+#  nslookup random-quote-service
+#  nslookup quotes.rest
+
+kind: Service
+apiVersion: v1
+metadata:
+  #when looking up this service using the service name, the cluster
+  #DNS will return a CNAME record with the value quotes.rest
+  name:  random-quote-service
+spec:
+  type:  ExternalName
+  externalName: quotes.rest #must be a valid DNS name.  e.g. you can't do https://quotes.rest/qod
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  random-quote
+spec:
+  selector:
+    name: random-quote-api
+  type:  LoadBalancer
+  ports:
+  - name:  name-of-the-port
+    port:  80
+    targetPort:  8000 
+---
+# This is the deployment and pod template for the API that will
+# integrate with the random-quote-service
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name:  random-quote-api
+  labels:
+    name:  random-quote-api
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name:  random-quote-api
+    spec:
+      containers:
+      - image:  architechbootcamp/random-quote:1.0.0
+        imagePullPolicy: Always
+        name:  random-quote-api
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "55M"
+          limits:
+            cpu: "20m"
+            memory: "55M"
+        ports:
+        - containerPort: 8000
+        env:
+        #Notice the value of the environment variable
+        #is the name of the service defined above
+        - name: RANDOM_QUOTE_SERVICE
+          value: random-quote-service
+      restartPolicy: Always
