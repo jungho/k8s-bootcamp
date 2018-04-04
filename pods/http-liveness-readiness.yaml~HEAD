@@ -1,0 +1,53 @@
+#This example is from https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+#
+# There are different way to implement a liveness probe.  
+# exec (executing a command within the container), tcp and http
+#
+# Deploy the pod with 'kubectl create -f http-liveness.yml'
+# Get status with 'kubectl get pod/liveness-http' -w  //the -w is for 'watch'
+# Notice that is seems to be restarting.
+# Get details with 'kubectl describe pod/liveness-http' to see what is going on.
+# 
+# You can also specify successThreshold and failureThreshold.
+# With successThreshold, you can state that after a previous failure, there must be a 
+# min number of success status returned before the kubelet will deem the container is healthy
+# 
+# With failureThreshold, you can state the number of failures that will trigger restarting 
+# the pod.
+ 
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-http
+spec:
+  containers:
+  - name: liveness
+    image: gcr.io/google_containers/liveness
+    args:
+    - /server
+    livenessProbe:
+      httpGet: 
+        path: /healthz # Success if 200 <= status code <= 400 
+        port: 8080
+        httpHeaders:
+        - name: X-Custom-Header
+          value: Awesome
+      initialDelaySeconds: 3 #time to wait prior to first probe
+      periodSeconds: 3 #time to wait between probes
+    #If the kubelet can connect to port 8080 then it deems this pod ready
+    # to accept requests.  You can specify readiness probes using httpGet 
+    # or exec also.
+    readinessProbe:
+      tcpSocket:
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 10
+
+    # valid values are: Always (default), OnFailure (livenessProbe defined), Never
+    # If Always, OnFailure, kubectl will retry with exponential backoff delay up 
+    # to 5 mins and is reset after 10 mins of successful execution.
+    # See https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#restart-policy
+#    restartPolicy: OnFailure
+

@@ -1,0 +1,16 @@
+# deploy the pod using 'kubectl create -f simple-pod.yml'
+# get pod details using 'kubectl describe pod/nginx-example'
+# connect to the pod using 'kubectl port-forward nginx-example 8080:80' and open a browser to http://127.0.0.1:8080
+# delete the pod using 'kubectl delete -f simple-pod.yml'
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-example
+  labels:
+    day1: nginx-pod
+spec:
+  containers:
+  - name: my-nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
