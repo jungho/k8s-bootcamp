@@ -1,0 +1,31 @@
+#This pod runs as root. It will attempt to write to the /mnt/data directory.
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pv-pod-01
+spec:
+  volumes:
+  - name: pv-storage
+    persistentVolumeClaim:
+      claimName: pv-claim-01
+  containers:
+  - name: busybox-root
+    image: busybox
+    ports:
+    - containerPort: 80
+      name: "http-server"
+    command:
+    - 'sh'
+    - '-c'
+    - |
+        if echo "writing to /mnt/data" > /mnt/data/message; then
+          echo "successfully wrote to /mnt/data"
+        else
+          echo "FAILED TO WRITE TO /mnt/data"
+        fi
+        sleep 1000
+    volumeMounts:
+    - mountPath: "/mnt/data"
+      #here we mount the volume defined
+      #above in volumes
+      name: pv-storage

@@ -1,0 +1,25 @@
+# This pod will have a QoS of Burstable.  See https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/
+#
+# Deploy the pod with 'kubectl create -f qos-burstable.yml'
+# Get pod details with 'kubectl get pod/qos-burstable --output=yaml' to see
+# the pod details.  Notice the qosClass value.
+#
+# See https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+# for explanation of the units used for cpu/memory
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: qos-burstable
+  labels:
+    day1: nginx-pod
+spec:
+  containers:
+  - name: qos-burstable
+    image: nginx
+    imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        memory: "200Mi"
+      requests:
+        memory: "100Mi"

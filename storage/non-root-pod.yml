@@ -1,0 +1,35 @@
+#This pod runs as NON-root. It will attempt to write to the /mnt/data directory.
+#It will FAIL.  Why?  Because to mount the volume, the container must run as root.
+#This is a problem!  See non-root-correct-pod.yml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: non-root-pod-01
+spec:
+  volumes:
+  - name: pv-storage
+    persistentVolumeClaim:
+      claimName: pv-claim-01
+  containers:
+  - name: busybox-root
+    image: busybox
+    ports:
+    - containerPort: 80
+      name: "http-server"
+    command:
+    - sh
+    - "-c"
+    - |
+        if echo "writing to /mnt/data" > /mnt/data/message; then
+          echo "successfully wrote to /mnt/data"
+        else
+          echo "FAILED TO WRITE TO /mnt/data"
+        fi
+    volumeMounts:
+    - mountPath: "/mnt/data"
+      #here we mount the volume defined
+      #above in volumes
+      name: pv-storage
+  securityContext:
+    #Run as user with UID 1000 e.g. non-root
+    runAsUser: 1000

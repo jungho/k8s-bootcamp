@@ -1,0 +1,54 @@
+#This example demonstrates one strategy for dealing with the volumes being mounted as root.
+#Have an initContainer that runs in privileged mode.  Add a user and chown the mount
+#to that user.  In the main container, runAsUser with the GID of the user.
+kind: Pod
+apiVersion: v1
+metadata:
+  name: non-root-pod-02
+spec:
+  volumes:
+  - name: pv-storage
+    persistentVolumeClaim:
+      claimName: pv-claim-01
+  initContainers:
+  - name: busybox-root
+    image: busybox
+    volumeMounts:
+    - mountPath: "/mnt/data"
+      name: pv-storage
+    command:
+    - sh
+    - "-c"
+    - |
+        #create non-root user and change ownership/permissions to mountpath
+        #note the initContainer will run as root
+        adduser -DH -u 1000 non-root
+        chown -R non-root /mnt/data
+        chmod 760 /mnt/data
+    #This container will run as root and change the ownership and permissions
+    #of the volume
+    securityContext:
+      privileged: true
+  containers:
+  - name: busybox-non-root
+    image: busybox
+    ports:
+    - containerPort: 80
+      name: "http-server"
+    command:
+    - sh
+    - "-c"
+    - |
+        if echo "writing to /mnt/data" > /mnt/data/message; then
+          echo "successfully wrote to /mnt/data"
+        else
+          echo "FAILED TO WRITE TO /mnt/data"
+        fi
+        sleep 1000
+    volumeMounts:
+    - mountPath: "/mnt/data"
+      #here we mount the volume defined
+      #above in volumes
+      name: pv-storage
+    securityContext:
+      runAsUser: 1000
