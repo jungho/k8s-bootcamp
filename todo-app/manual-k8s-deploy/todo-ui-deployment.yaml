@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-ui
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: todo-ui
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: todo-ui
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: todo-ui
+    spec:
+      containers:
+      - name: todo-ui
+        image: architechbootcamp/todo-ui:1.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: REACT_APP_TEST_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: todo-ui-config
+              key: is_test_mode
+        - name: REACT_APP_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: azure_app_id
+        - name: REACT_APP_TENANT
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: ad_tenant
+      #imagePullSecrets:
+      # - name: techdemosecret

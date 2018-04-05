@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 deployWithConduit=false
-namespace='todo-app'
+namespace='default'
 
 function checkConduitInstalled {
     if conduit version
@@ -39,12 +39,19 @@ kubectl create --namespace="$namespace" -f todo-ui-config.yaml
 
 #Now create the application
 
+kubectl create -f mongodb-deployment.yaml --namespace="$namespace"
+
 if [ "$deployWithConduit" = true ]; then
     echo "deploying todo-app to namespace: '$namespace' WITH the Conduit side proxy."
-    conduit inject todo-app.yaml | kubectl create --namespace="$namespace" -f -
+
+    conduit inject user-api-deployment.yaml | kubectl create --namespace="$namespace" -f -
+    conduit inject todo-api-deployment.yaml | kubectl create --namespace="$namespace" -f -
+    conduit inject todo-ui-deployment.yaml | kubectl create --namespace="$namespace" -f -
     echo ""
     echo "access the Conduit Dashboard by executing 'conduit dashboard'"
 else
     echo "deploying todo-app to namespace: '$namespace'"
-    kubectl create -f todo-app.yaml --namespace="$namespace"
+    kubectl create -f user-api-deployment.yaml --namespace="$namespace"
+    kubectl create -f todo-api-deployment.yaml --namespace="$namespace"
+    kubectl create -f todo-ui-deployment.yaml --namespace="$namespace"
 fi

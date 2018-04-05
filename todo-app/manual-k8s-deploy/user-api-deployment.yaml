@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-api
+spec:
+  ports:
+  - port: 8082
+    targetPort: 8082
+  selector:
+    app: user-api
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: user-api
+spec:
+  replicas:  2
+  minReadySeconds: 3
+  template:
+    metadata:
+      labels:
+        app: user-api
+        tier: backend
+    spec:
+      containers:
+      - name: user-api
+        image: architechbootcamp/user-api:1.0.1
+        livenessProbe:
+          httpGet:
+            path: '/api/user/healthcheck'
+            port: 8082
+            scheme: HTTP
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: '/api/user/is-ready'
+            port: 8082
+            scheme: HTTP
+          timeoutSeconds: 5
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8082
+        env:
+        - name: MONGODB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: user-api-config
+              key: db_url
+        - name: IS_TEST_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: user-api-config
+              key: is_test_mode
+        - name: APP_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: user-api-config
+              key: app_log_level
+        - name: AZURE_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: azure_app_id
+        - name: AZURE_IDENTITY_META_DATA
+          valueFrom:
+            secretKeyRef:
+              name: todoapp-secrets
+              key: ad_identity_meta_data
+      #imagePullSecrets:
+      #- name: registry_credentials
+
