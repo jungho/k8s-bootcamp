@@ -21,7 +21,7 @@ The second deals with your application and server logs, so we are dealing with t
 
 We will be deploying the monitoring and logging stacks using [Operators](https://coreos.com/blog/introducing-operators.html).  Operators were defined by the [CoreOS](https://coreos.com/) team and they are essentially [Custom Resource Definitions](https://kubernetes.io/docs/concepts/api-extension/custom-resources/) and controllers to deploy and manage applications using K8S native approaches while encapsulating domain specific knowledge in CRDs.
 
-Custom Resource Defintions are a means for you to define your own resources in K8S and extend the API server recognize your resources!  Your controller then would watch the CRDs and take appropriate action.  Pretty cool yes??  Operators are a excellent example of how to leverage CRDs!!
+Custom Resource Defintions are a means for you to define your own resources in K8S and extend the API server to recognize your own resources!  Your controller then would watch the CRDs and take appropriate action.  Pretty cool yes??  Operators are a excellent example of how to leverage CRDs!!
 
 ### Prometheus Operator ###
 
