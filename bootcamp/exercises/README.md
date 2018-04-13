@@ -120,7 +120,7 @@ You will be using the AKS environment set up for you by Microsoft.  However, if 
 You will need the following tools installed:
 
 * Azure cli
-* docker
+* docker (only if you will be building docker images locally)
 * Helm
 * kubectl
 * Visual Studio Code
@@ -152,7 +152,6 @@ Install the following extensions (search in the extensions tab):
 
 * Kubernetes Support
 * vs-kubernetes
-* vscode-helm
 * Docker
 
 These extensions provide syntax highlighting, code snippets and more for working with Docker, Kubernetes and Helm artefacts.
