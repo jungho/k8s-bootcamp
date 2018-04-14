@@ -2,7 +2,9 @@
 
 Kubernetes is a platform for deploying, scaling and managing container based applications in a secure, resilient manner.  It enables you to abstract away the underlying infrastructure to dynamically scale and deploy your containerized applications. Through specifying your "desired state" (within manifests), the K8S control plane works behind the scenes to ensure the current state of your application meets the desired state.  It does so even in the event of your application crashing or if there is a hardware failure.
 
-![K8S Architecture from Kubernetes.io](./images/k8s-architecture.png "K8S Architecture")
+![K8S Architecture from Kubernetes.io](./images/K8S-Architecture.png "K8S Architecture") 
+
+Diagram by [Lucas Käldström](https://docs.google.com/presentation/d/1Gp-2blk5WExI_QR59EUZdwfO2BWLJqa626mK2ej-huo/edit#slide=id.g1e639c415b_0_56)
 
 A K8S cluster is made up of two primary nodes:
 - The master node that hosts the components that make up the K8S control plane (Actually the components can be deployed to separate servers instead of all being deployed to a single master server e.g. deploy etcd to its own cluster for security and HA reasons.)
