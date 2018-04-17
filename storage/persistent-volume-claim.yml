@@ -4,7 +4,7 @@ apiVersion: v1
 metadata:
   name: task-pv-claim
 spec:
-  volumeName: task-pv-volume
+  volumeName: pv-volume
   selector: 
     matchLabels:
        type: local

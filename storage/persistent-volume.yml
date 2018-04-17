@@ -4,7 +4,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: task-pv-volume
+  name: pv-volume
   labels:
     type: local
 spec:
