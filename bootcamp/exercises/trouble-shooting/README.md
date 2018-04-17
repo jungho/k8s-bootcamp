@@ -33,10 +33,10 @@ Deploy the todo-app helm chart in [todo-app](./todo-app).  There is a small issu
 kubectl create namespace troubleshooting
 
 #then create the necessary secrets and namespace for the deployment
-./create_secrets trouble-shooting
+./create_secrets troubleshooting
 
 #deploy the helm chart
-helm --namespace trouble-shooting install todo-app
+helm --namespace troubleshooting install todo-app
 
 ## Some more good tips for Azure ##
 
