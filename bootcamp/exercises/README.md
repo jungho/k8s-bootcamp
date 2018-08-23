@@ -17,7 +17,7 @@ Install the latest version of azure cli for your operating system from [here](ht
 
 ## Install Docker
 
-*This portion is only required if you will be building Docker images locally and if you want to deploy a local openshift cluster using the oc cli*
+*This portion is only required if you will be building Docker images locally and if you want to deploy to a local Kubernetes cluster using the kubectl cli*
 
 Install docker for your operating system.
 
