@@ -7,6 +7,11 @@ You should have successfully set up your environment as outlined in [README.md](
 From within the helm directory run the following commands:
 
 ```sh
+#On AKS, the necessary rolebinding for helm to be able to deploy resources to the necessary namespaces. This is required 
+#to give the default service account in each namespace permissions to access the necessary resources. 
+#This is not required on Minikube.
+kubectl create -f default-rolebinding.yaml
+
 #1) ensure the helm client version and the tiller version on the server are compatible.
 helm init --upgrade
 
