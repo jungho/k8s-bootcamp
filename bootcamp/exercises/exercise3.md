@@ -8,7 +8,7 @@ You should have successfully set up your environment as outlined in [README](./R
 
 In this exercise you are going to be deploy a pod and expose it as a service.
 
-### Deploy a Pod and expose it as a LoadBalanced Service in ACS ###
+### Deploy a Pod and expose it as a LoadBalanced Service in AKS ###
 
 * Create a docker image with contains simple HTTP service that returns a random number and today's date.  You can use any technology you wish.
 * Tag the image and push it to DockerHub or Azure Container Service

@@ -12,7 +12,9 @@ metadata:
 spec:
   containers:
   - name: my-busybox
-    image: busybox
+    #I use 1.28 because the latest busybox image has a nslookup bug
+    image: busybox:1.28
+    #sleep required so that the busybox container does not exit
     command:
       - 'sleep'
       - '60000'
