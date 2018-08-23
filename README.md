@@ -62,7 +62,7 @@ By the end of this bootcamp, you will learn the following K8S concepts:
 - [Ingress](./ingress/README.md) - Customizing the routing your published services.
     - Deploying the nginx ingress controller
     - Configuring routing to different version of your services
-- [RBAC - Role Based Access Control](./rbac/README.md) - Controlling access to your K8S cluster.
+- [RBAC - Role Based Access Control](./security/README.md) - Controlling access to your K8S cluster.
     - K8S authn/authr model
     - Roles and Role bindings
     - Integrating Azure AD for authn/authr
