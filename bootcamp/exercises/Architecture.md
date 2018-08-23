@@ -52,3 +52,4 @@ The resources describe your desired state, the controllers work to make the desi
 * [Large-scale cluster management at Google with Borg](https://research.google.com/pubs/pub43438.html)
 * [12 Factor Application Principles](https://12factor.net/)
 * [K8S API Reference](https://v1-8.docs.kubernetes.io/docs/api-reference/v1.8/)
+* [CNCF Cloud Native Landscape](https://landscape.cncf.io/)

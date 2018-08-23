@@ -10,12 +10,17 @@ spec:
     app: {{.Values.WebUI.Name}}
     environment: {{.Values.Global.Environment}}
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  {{.Values.WebUI.Name}}
 spec:
   replicas: {{.Values.WebUI.Replicas}}
+  selector:
+    matchLabels:
+      app:  {{.Values.WebUI.Name}}
+      tier: frontend
+      environment: {{.Values.Global.Environment}}
   template:
     metadata:
       labels:

@@ -10,12 +10,17 @@ spec:
     tier: backend
     environment: {{.Values.Global.Environment}}
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.UserAPI.Name }}
 spec:
   replicas:  {{.Values.UserAPI.Replicas}}
+  selector:
+    matchLabels:
+      app: {{ .Values.UserAPI.Name }}
+      tier: backend
+      environment: {{.Values.Global.Environment}}
   minReadySeconds: 3
   template:
     metadata:

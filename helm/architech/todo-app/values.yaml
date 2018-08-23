@@ -13,8 +13,8 @@ Global:
   Host: 192.168.99.100.nip.io
 
 WebUI:
-  Name: todo-ui
-  ServiceName: todo-ui
+  Name: web-ui
+  ServiceName: todo-webui-service
   Image: "architechbootcamp/todo-ui"
   ImageTag: "latest"
   Replicas: 2
@@ -53,12 +53,14 @@ MongoDb:
   ServicePort: 27017
   ContainerPort: 27017
   PVC: mongodb-pvc
+  PV: mongodb-pv
+  HostPath: /tmp/data
 
 IngressNginx:
   Name: nginx-ingress
   ServiceName: nginx-ingress
   Image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.10.2"
-  Replicas: 1
+  Replicas: 2
   ServicePort: 80
   ContainerPort: 80
 

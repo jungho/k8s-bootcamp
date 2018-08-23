@@ -12,6 +12,3 @@ In this exercise you will create a configmap then access the configuration from 
 * Create a Pod using the busybox image from DockerHub and get shell access HINT: use kubectl exec command.
 * Prove that you can read the configuration as environment variables from within the shell
 
-### Next... ###
-
-[Exercise 7](./exercise7.md)

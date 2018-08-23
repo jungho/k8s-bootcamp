@@ -38,7 +38,7 @@ spec:
     port:  8080
     targetPort:  pod-port
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  pod-details
@@ -46,6 +46,9 @@ metadata:
     app: pod-details
 spec:
   replicas: 5
+  selector:
+    matchLabels:
+      app: pod-details
   strategy:
     rollingUpdate:
       maxSurge: 1

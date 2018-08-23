@@ -7,7 +7,3 @@ You should have successfully set up your environment as outlined in [README](./R
 ## Objective ##
 
 Do the troubleshooting exercise in [trouble-shooting](./trouble-shooting/README.md)
-
-### Next... ###
-
-[Exercise 8](./exercise8.md)

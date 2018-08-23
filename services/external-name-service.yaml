@@ -48,7 +48,7 @@ spec:
 ---
 # This is the deployment and pod template for the API that will
 # integrate with the random-quote-service
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  random-quote-api
@@ -56,6 +56,9 @@ metadata:
     name:  random-quote-api
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: random-quote-api
   strategy:
     rollingUpdate:
       maxSurge: 1

@@ -1,0 +1,25 @@
+#From https://docs.bitnami.com/kubernetes/how-to/secure-kubernetes-cluster-psp/#case-3-prevent-pods-from-accessing-host-ports
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: restrict-ports
+spec:
+  privileged: false
+  runAsUser:
+    rule: RunAsAny
+  #SELinux must be enabled on the nodes
+  seLinux:
+    rule: RunAsAny
+  #The allowable GID that can be set by the pod/container to access a volume
+  fsGroup:
+    rule: RunAsAny
+  #The additional GID that can be set by the pod/container 
+  supplementalGroups:
+    rule: RunAsAny
+  #what types of volumes that are allowed
+  volumes:
+  - '*'
+  #Pods cannot access any host port but those within min/max
+  hostPorts:
+  - min: 0
+    max: 0

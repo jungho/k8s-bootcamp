@@ -14,6 +14,9 @@ kubectl logs <pod-name>
 #If the pod has multiple containers and you want the log for a specific container
 kubectl logs <pod-name> -c <container-name>
 
+#Use kubectl describe
+kubectl describe <pod-name>
+
 #look at the event stream in another terminal window as you deploy the application
 #Each of the controllers will raise events as they take their action
 kubectl get events
@@ -29,6 +32,11 @@ kubectl exec -ti <pod-name> -- bash
 Deploy the todo-app helm chart in [todo-app](./todo-app).  There is a small issue with this chart.  It will deploy but the application will fail to run.  Try to find out what the issue is and correct it.
 
 ```sh
+#On AKS, the necessary rolebinding for helm to be able to deploy resources to the necessary namespaces. This is required 
+#to give the default service account in each namespace permissions to access the necessary resources. 
+#This is not required on Minikube.
+kubectl create -f default-rolebinding.yaml
+
 #first create a namespace to work in
 kubectl create namespace troubleshooting
 
@@ -38,6 +46,9 @@ kubectl create namespace troubleshooting
 #deploy the helm chart
 helm --namespace troubleshooting install todo-app
 
+```
+
 ## Some more good tips for Azure ##
 
-[Debugging K8S on Azure](https://github.com/andyzhangx/Demo/blob/master/debug/README.md)
+- [Debugging K8S on Azure](https://github.com/andyzhangx/Demo/blob/master/debug/README.md)
+- [K8S Explorer - Very helpful tool that is deployed as a pod to introspect your K8S environment](https://github.com/kubernetes/kubernetes/tree/release-1.5/examples/explorer)

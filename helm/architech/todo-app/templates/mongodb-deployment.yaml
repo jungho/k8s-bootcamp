@@ -10,12 +10,17 @@ spec:
     tier: data-tier
     environment: {{.Values.Global.Environment}}
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{.Values.MongoDb.Name}}
 spec:
   replicas: {{.Values.MongoDb.Replicas}}
+  selector:
+    matchLabels:
+      app:  {{ .Values.MongoDb.Name }}
+      tier: data-tier
+      environment: {{.Values.Global.Environment}} 
   minReadySeconds: 2
   template:
     metadata:
@@ -35,21 +40,3 @@ spec:
       volumes:
       - name: data
         emptyDir: {}
-#comment emptyDir above
-#and uncomment the lines below to use PVCs and dynamic volume provisioning
-#BECAREFUL about the spacing!
-#What happens if you set the replica count > 1?
-
-#        persistentVolumeClaim:
-#          claimName: mongo-pvc
----
-#kind: PersistentVolumeClaim
-#apiVersion: v1
-#metadata:
-#  name: mongo-pvc
-#spec:
-#  accessModes:
-#  - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 3Gi

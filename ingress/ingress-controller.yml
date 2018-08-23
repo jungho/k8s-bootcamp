@@ -14,7 +14,7 @@ spec:
       protocol: TCP
       targetPort: 80
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-ingress
@@ -22,6 +22,9 @@ metadata:
     app: nginx-ingress
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-ingress
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -88,7 +91,7 @@ spec:
     app: default-http-backend
 ---
 # default backend from https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/default-backend.yaml
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: default-http-backend
@@ -96,6 +99,9 @@ metadata:
     app: default-http-backend
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: default-http-backend 
   template:
     metadata:
       labels:
@@ -124,4 +130,3 @@ spec:
           requests:
             cpu: 10m
             memory: 20Mi
----

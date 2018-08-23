@@ -13,6 +13,6 @@ spec:
   containers:
   - name: my-busybox
     image: busybox
-    command: 
+    command:
       - 'sleep'
-      - '100000'
+      - '60000'

@@ -10,7 +10,7 @@ spec:
   #when the PVC is released, retain the data.
   #valid values are Retain (default), Recycle and Delete.
   #Not all volume plugins support Recycle. See the volume plugin for details.
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Recycle 
   #to deploy to minikube ssh into minikube then create the directory
   #
   # minikube ssh

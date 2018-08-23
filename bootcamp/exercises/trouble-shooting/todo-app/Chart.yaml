@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for Kubernetes
-name: todo-app
+name: todo-app-broken
 version: 0.2.0

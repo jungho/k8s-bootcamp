@@ -23,7 +23,7 @@ spec:
   selector:
     app: headless-nginx
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  headless-nginx
@@ -31,6 +31,9 @@ metadata:
     app: headless-nginx
 spec:
   replicas: 5
+  selector:
+    matchLabels:
+      app: headless-nginx
   strategy:
     rollingUpdate:
       maxSurge: 1

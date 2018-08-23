@@ -1,9 +1,10 @@
 #/usr/bin/bash
 user='qa'
 organization='architech'
+ca_location=${HOME}'/.minikube'
 
 if [ "$#" -lt 2 ]; then
-  echo "usage: $0 user organization [ca_location]"
+  echo "usage: $0 user organization ca_location"
   exit 1
 else
   user=$1

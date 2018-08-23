@@ -1,7 +1,7 @@
 # Packaging and deploying K8S applications using Helm #
 ## Pre-Requisites ##
 
-You should have successfully set up your environment as outlined in [Day1/setup](../bootcamp/exercises/setup.md)
+You should have successfully set up your environment as outlined in [README.md](../bootcamp/exercises/README.md)
 ## Deploying the Todo Application ##
 
 From within the helm directory run the following commands:
@@ -44,16 +44,14 @@ Then update the ingress resource to reflect the external IP.
 
 ```sh
 #this will load the yaml manifest in your editor.
-kubectl edit ingress/todo-app-ingress --namespace todo-app
+kubectl edit ingress/todo-app-ingress --namespace <namespace>
 ```
 
 Update the `host:` field with your `EXTERNAL-IP.nip.io` and save the file. kubectl will update the ingress with the new value.  Note, the host field only accepts a valid DNS name, IP addresses are not allowed.  To deal with this we will use a dynamnic DNS service called nip.io.
 
 ## Instructions for Minikube ##
 
-You should have installed and started up minikube with RBAC enabled by falling the instructions in [setup](../bootcamp/exercises/setup.md).
-
-Move the contents of [architech/todo-app/minikube](./architech/todo-app/minikube) directory to the architech/todo-app/templates directory.
+You should have installed and started up minikube by following the instructions in [bootcamp/exercises/README.md](../bootcamp/exercises/README.md).
 
 Deploy the helm chart using the instructions above.
 
@@ -67,7 +65,12 @@ Update the ingress resource as described above.
 
 **With minikube, the external IP for the LoadBalancer service will always display as PENDING.  This is because minikube does not provision a LoadBalancer. Therefore, to access the application via your browser, you need to use the IP and port displayed.** 
 
+## Securing Helm/Tiller ##
+
+It is very, very important to follow security best-practices with Helm/Tiller.  Tiller by default will be deployed without any restriction.  Although, helm can only access Tiller after being authenticated by the API Server, Tiller can do anything on the cluster!!  Hence lock down your Tiller deployment using the best-practices list in the [docs](https://github.com/kubernetes/helm/blob/master/docs/securing_installation.md).  Also see this excellent [article](https://engineering.bitnami.com/articles/helm-security.html) from Bitami.
+
 ## References ##
 
 - [Helm Documenation](https://docs.helm.sh/using_helm/)
 - [Debugging Templates](https://github.com/kubernetes/helm/blob/master/docs/chart_template_guide/debugging.md)
+- [Using SSL Between Helm & Tiller](https://github.com/kubernetes/helm/blob/master/docs/tiller_ssl.md)
