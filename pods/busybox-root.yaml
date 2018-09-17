@@ -27,5 +27,3 @@ spec:
     command:
     - 'sleep' 
     - '10000'
-    #securityContext:
-    #  runAsNonRoot: true
