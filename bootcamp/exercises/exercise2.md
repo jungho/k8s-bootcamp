@@ -19,7 +19,7 @@ Use the busybox image from [DockerHub](https://hub.docker.com/_/busybox/).
 
 ### Create and deploy a pod with liveness probes and QoS ###
 
-* Use the nginx image from Dropbox.
+* Use the nginx image from DockerHub.
 * The liveness probe path should be '/'.
 * Configure the probe to wait 5 seconds prior to the first probe.
 * Configure the probe to check every 10 seconds
