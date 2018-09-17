@@ -22,8 +22,6 @@ spec:
     - 'sleep'
     - '1000'
     securityContext:
+      #Which non-root user to runAs
       runAsUser: 1000
-      #redundant as 1000 is not root
       runAsNonRoot: true
-
-      
