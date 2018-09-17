@@ -20,6 +20,16 @@ See the [helm/README.md](../../helm/README.md) for instructions on how to deploy
 
 ### List all deployments, services, pods ###
 
+Note, when you deployed the todo-app using helm, you did so to a namespace.  You need to run each of the commands below within the context of that namespace.  You do so by passing the `-n <namespace>` option to the commands below.  Another way is to update context to use a default namespace like so:
+
+```sh
+#Assume the name of the context is aks-cluster
+kubectl config set-context aks-cluster --namespace=todo-app
+
+#Now you can execute the commands without -n <namespace>
+
+```
+
 To list deployments:
 
 ```sh
