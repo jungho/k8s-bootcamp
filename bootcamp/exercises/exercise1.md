@@ -103,8 +103,3 @@ You would need to add ``` --namespace <namespace> ``` to all the kubectl command
 ### Next ... ###
 
 [Exercise 2](./exercise2.md)
-
-## Advanced ##
-
-Deploy the istio service mesh using helm.  Verify the deployment succeeded then open up a proxy to the Grafana dashboard and access it using your browser.
-See [deploying istio](../../helm/deploying-istio.md) for instructions.
