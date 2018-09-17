@@ -84,26 +84,33 @@ kubectl get deployment/<todo-api-deployment>
 
 ### Update the Todo API and do a rolling update ###
 
-Open up two shells.  In the first shell run the following command to update the image for the todo-api to a new version.:
+Open up two shells.  
+
+In the first shell watch the status of the todo-api deployment:
 
 ```sh
-#replace <todo-api-deployment> with the name of your deployment obtained from the 'kubectl get deployments'
-
-#we are setting the container image for the todo-api container to architechbootcamp/todo-api:1.0.1
-#See spec.containers.image field of the deployment manifest
-kubectl set image deployment/<todo-api-deployment> todo-api=architechbootcamp/todo-api:1.0.1
+#The -w says "watch"
+kubectl get deployments/todo-api -w
 ```
 
-In the second shell we are going to watch the status of the rollout.
+In the second shell update the image of the deployment.
 
 ```sh
-kubectl rollout status deployment/<todo-api-deployment>
+#we are setting the container image for the todo-api container to architechbootcamp/todo-api:1.0.1
+#See spec.containers.image field of the deployment manifest
+kubectl set image deployment/todo-api todo-api=architechbootcamp/todo-api:1.0.1
+```
+
+In the second shell, check the status of the deployment.
+
+```sh
+kubectl rollout status deployment/todo-api
 ```
 
 Now let's rollback!
 
 ```sh
-kubectl rollout undo deployment/<todo-api-deployment>
+kubectl rollout undo deployment/todo-api
 ```
 
 ### Instructions for Minikube ###
