@@ -24,11 +24,14 @@ spec:
     port:  80
     targetPort:  pod-port
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: stock-quote-api
 spec:
+  selector:
+    matchLabels:
+      app: stock-quote-api  
   replicas: 5
   template:
     metadata:
