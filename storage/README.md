@@ -9,7 +9,9 @@ Which volume type you use depends on your requirements:
 
 - emptyDir volume type uses either memory or local filesystem for storage.  It only should be used for temp data
 - hostPath volume maps the volume to a specific directory on the node.  This is useful if you have a daemonset that needs to access the same directory on all nodes.
-- nsf volume type uses network storage using the nfs protocol.  Note there are many volume types that support network storage.  For example, azureDisk, azureFile, awsElasticBlockStore.  These are the volume types that you want to use so that when your pods are rescheduled to different nodes, the same volumes are still accessible.
+- nsf volume type uses network storage using the nfs protocol.  Note there are many volume types that support network storage.  For example, azureFile, awsElasticBlockStore.  These are the volume types that you want to use so that when your pods are rescheduled to different nodes, the same volumes are still accessible.
+- You need to access the volume from multiple nodes - use azureFile
+- You need to access the volume from a single node - use azureDisk
 
 * See the [Volume reference at K8S.io](https://kubernetes.io/docs/concepts/storage/volumes/) for more details.
 * See [here](https://github.com/kubernetes/examples/blob/master/staging/volumes/azure_disk/azure.yaml) for an example of a pod that uses Azure Disk volumes.  Notice how you must first specify the volume, then mount the volume within your container specification.  How you specify the volume depends on the volume type.
@@ -66,8 +68,6 @@ pv-claim-02   Pending   pv-volume   0                                        5s
 
 ```
 
-*Note: It is very important that you do not remove PVCs indiscriminantly!!! K8S 1.10 does have an beta feature that will not remove PVCs that are in active use by a pod, or a PV that is bound to a PVC.  However, this needs to be enabled and prior versions do not have any such safety net.*
-
 *Note: How a PV is reclaimed after a PVC is removed depends on the reclaim policy - Retain, Recycle, Delete. Delete is the most destructive as it also deletes the PV and the underlying backing storage.  Not all storage providers support all policies. See [reclaim policies](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaiming) for details*
 
 ## Storage Classes ##
@@ -120,7 +120,7 @@ kubectl get pvc
 # 2. A PV was dynamically created and the PVC was immediately bound.
 # 3. The size of the PV is exactly what I requested in the PVC.
 NAME                STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-pvc-default-class   Bound     pvc-7fe2dac2-265a-11e8-a59b-080027a22b9d   3Gi        RWO            standard       4s
+pvc-default-class   Bound     pvc-7fe2dac2-265a-11e8-a59b-080027a22b9d   3Gi        RWO            default        4s
 
 ```
 
@@ -145,7 +145,7 @@ Here is the issue that describes the problem - https://github.com/kubernetes/kub
 
 Other approaches to address this issue without using initContainers are:
 
-- Using [mountOptions](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#mount-options), however, this is not supported by all volume types and it is not supported on Azure prior to version 1.8.5 of Kubernetes which as of now is only available through ACS Engine.
+- Using [mountOptions](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#mount-options), however, this is not supported by all volume types.  If using azureFile or azureDisk, this is the way to go.  You can set the mount options in the StorageClass.  See [here](https://docs.microsoft.com/en-us/azure/aks/azure-files-dynamic-pv#mount-options) for default mountOptions by K8S version.
 - Using [pod.spec.securityContext.fsGroup](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/). This changes the owning GID of the volume to the GID set in fsGroup. Again, not supported by all volume types.  
 - Using [pod.spec.securityContext.supplementalGroups](https://kubernetes.io/docs/concepts/policy/pod-security-policy/#users-and-groups). Enables you to specify additional linux supplementary groups for the process at runtime. Again, not supported by all volume types.
 
@@ -157,5 +157,7 @@ For supplementalGroups, the cluster admin needs to be aware of the permissions s
 * [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
 * [Storage Classes](https://kubernetes.io/docs/concepts/storage/storage-classes/)
 * [Dynamic Volume Provisioning](https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/)
-* [Persistent Volumes with Azure Disk](https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv)
-* [Persistent Volumes with Azure File](https://docs.microsoft.com/en-us/azure/aks/azure-files-dynamic-pv)
+* [Dynamic PV with Azure Disk](https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv)
+* [Dynamic PV with Azure File](https://docs.microsoft.com/en-us/azure/aks/azure-files-dynamic-pv)
+* [Static PV with Azure Disk](https://docs.microsoft.com/en-us/azure/aks/azure-disk-volume)
+* [Static PV with Azure File](https://docs.microsoft.com/en-us/azure/aks/azure-files-volume)
