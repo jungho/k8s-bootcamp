@@ -44,7 +44,7 @@ kubectl get pv/pv-volume
 
 #you should see something like this, note 5Gi is available
 NAME        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM     STORAGECLASS   REASON    AGE
-pv-volume   5Gi        RWO            Retain           Available             standard                 43s
+pv-volume   5Gi        RWO            Retain           Available                                      43s
 
 #create a pvc 
 kubectl create -f pvc-01.yml
@@ -53,7 +53,7 @@ kubectl get pvc/pv-claim-01
 
 #Notice the pvc is bound, I asked for 1Gi but I got 5Gi because PVC to PV is one to one
 NAME          STATUS    VOLUME      CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-pv-claim-01   Bound     pv-volume   5Gi        RWO            standard       8s
+pv-claim-01   Bound     pv-volume   5Gi        RWO                           8s
 
 #try to create another pvc
 kubectl create -f pvc-02.yml
@@ -62,7 +62,7 @@ kubectl get pvc/pv-claim-02
 
 #Notice it is pending.  It will stay that way forever because the PV is already bound to pv-claim-01
 NAME          STATUS    VOLUME      CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-pv-claim-02   Pending   pv-volume   0                         standard       5s
+pv-claim-02   Pending   pv-volume   0                                        5s
 
 ```
 

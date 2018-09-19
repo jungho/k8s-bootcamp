@@ -11,14 +11,13 @@ spec:
   #valid values are Retain (default), Recycle and Delete.
   #Not all volume plugins support Recycle. See the volume plugin for details.
   persistentVolumeReclaimPolicy: Recycle 
-  #to deploy to minikube ssh into minikube then create the directory
-  #
-  # minikube ssh
-  # su
-  # mkdir /mnt/data
+  #On Azure, every Linux VM has a temporary disk mounted to /mnt
+  #By using the hostPath volume, we are creating a PV that is mounted to the 
+  #/mnt directory on the host.  Only use hostPath if you need to access well-known
+  #paths on the host.
   hostPath:
-    path: /mnt/data
+    path: /mnt
   #required on minikube
-  storageClassName: standard
+  #storageClassName: standard
 
     

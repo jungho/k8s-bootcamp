@@ -1,6 +1,6 @@
 #an example of a PVC that uses the default storageclass
 #Note that it does not specify a volumeName.  It also does not specify a storageClass, therefore,
-#if a default storageclass has been provisioned on the cluster, the volume will be dynamically
+#if a default storageclass has been provisioned on the cluster, a PersistentVolume will be dynamically
 #provisioned using the provisioner specified in the default storageclass.
 #
 #To see what storageclasses have been provisioned on your cluster run:

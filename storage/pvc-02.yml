@@ -4,6 +4,7 @@ metadata:
   name: pv-claim-02
 spec:
   volumeName: pv-volume
+  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   resources:
