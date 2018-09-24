@@ -15,17 +15,17 @@ kubectl create -f default-rolebinding.yaml
 #1) ensure the helm client version and the tiller version on the server are compatible.
 helm init --upgrade
 
-#2) Create a namespace to deploy your app. Replace <namespace> with whatever namespace you choose. 
-kubectl create namespace <namespace>
+#2) Create a namespace to deploy your app. 
+kubectl create namespace todo-app
 
 #3) Create secrets required by the app in the same namespace
-./create_secrets.sh <namespace>
+./create_secrets.sh todo-app
 
 #4) do a dry run install to make sure everything is ok. This command will echo out the manifests that will be deployed. Review it carefully.
 helm install --dry-run --debug architech/todo-app
 
 #5) install the todo-app
-helm install architech/todo-app --namespace <namespace>
+helm install architech/todo-app --namespace todo-app
 
 #6) check that the app has been deployed.  You should see the todo-app has been deployed.
 helm ls
