@@ -11,7 +11,7 @@ You will need the following tools installed:
 * [Visual Studio Code](#markdown-header-install-visual-studio-code)
 * [Minikube (optional, only if you want to run all the exercises)](#markdown-header-setting-up-minikube)
 
-**Note: You can do most of the exercises using Azure Cloud Shell directly from your portal Dashboard.  When you start up cloud shell for the first time, it will ask you to confirm creating a storage account. Select your subscription, if asked, then confirm creating the storage account.  Cloud shell will already have az cli, git and helm installed.  Once you initialize cloud shell, clone my git repository located at https://github.com/jungho/k8s-bootcamp.git**
+**Note: You can do most of the exercises using Azure Cloud Shell directly from your portal Dashboard.  When you start up cloud shell for the first time, it will ask you to confirm creating a storage account. Select your subscription, if asked, then confirm creating the storage account.  Cloud shell will already have az cli, git and helm installed.  Once you initialize cloud shell, clone my git repository located at https://github.com/jungho/k8s-bootcamp.git.  You can always access Azure cloud shell from https://shell.azure.com or from your portal dashboard at https://portal.azure.com.**
 
 ## Installing Azure CLI
 
