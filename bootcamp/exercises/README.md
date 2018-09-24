@@ -120,7 +120,7 @@ KubernetesVersion    Upgrades
 ```sh
 #this will create a cluster with 1 master node, 2 worker nodes with Kubernetes version 1.10.3
 #replace <cluster-name> with the desired name for your cluster, replace <rg-group> with you resource group name
-az aks create -g <rg-name> -n <cluster-name> -c 2 -k 1.10.3 -l <region>
+az aks create -g <rg-name> -n <cluster-name> -c 2 -k 1.10.3 -l <region> --generate-ssh-keys
 
 #list your AKS cluster
 az aks list -o table
