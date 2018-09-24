@@ -4,7 +4,7 @@
 
 [Copyright (c) 2018, Architech. All rights reserved.](./COPYRIGHT.md)
 
-** Link to presentation for this bootcamp is [here](./Kubernetes_Hackfest.pptx) ** 
+** Link to PDF version of the presentation for this bootcamp is [here](./Kubernetes_Hackfest.pdf) ** 
 
 [Kubernetes (K8S)](https://kubernetes.io/docs/home/) is the industry standard for deploying, managing, operating container based distributed applications.  It is proven in the most demanding production environments in the world.  Internet scale companies such as Google, Netflix, EBay and many more depend on Kubernetes to quickly deploy applications and bring product to market faster.
 
