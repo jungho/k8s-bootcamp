@@ -13,6 +13,8 @@ You will need the following tools installed:
 
 **Note: You can do most of the exercises using Azure Cloud Shell directly from your portal Dashboard.  When you start up cloud shell for the first time, it will ask you to confirm creating a storage account. Select your subscription, if asked, then confirm creating the storage account.  Cloud shell will already have az cli, git and helm installed.  Once you initialize cloud shell, clone my git repository located at https://github.com/jungho/k8s-bootcamp.git.  You can always access Azure cloud shell from https://shell.azure.com or from your portal dashboard at https://portal.azure.com.**
 
+**Tip: Install Azure Account Extension to access Azure Cloud Shell from VS Code! https://www.michaelcrump.net/azure-tips-and-tricks49/**
+
 ## Installing Azure CLI
 
 Install the latest version of azure cli for your operating system from [here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
