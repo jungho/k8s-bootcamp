@@ -4,7 +4,7 @@ apiVersion: v1
 metadata:
   name: pv-claim-01
 spec:
-  volumeName: pv-volume
+  volumeName: pv-hostpath
   storageClassName: ""
   accessModes:
     - ReadWriteOnce
