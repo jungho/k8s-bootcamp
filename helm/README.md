@@ -15,24 +15,24 @@ kubectl create -f default-rolebinding.yaml
 #1) ensure the helm client version and the tiller version on the server are compatible.
 helm init --upgrade
 
-#2) Create a namespace to deploy your app. Replace <namespace> with whatever namespace you choose. 
-kubectl create namespace <namespace>
+#2) Create a namespace to deploy your app. 
+kubectl create namespace todo-app
 
 #3) Create secrets required by the app in the same namespace
-./create_secrets.sh <namespace>
+./create_secrets.sh todo-app
 
 #4) do a dry run install to make sure everything is ok. This command will echo out the manifests that will be deployed. Review it carefully.
 helm install --dry-run --debug architech/todo-app
 
 #5) install the todo-app
-helm install architech/todo-app --namespace <namespace>
+helm install architech/todo-app --namespace todo-app
 
 #6) check that the app has been deployed.  You should see the todo-app has been deployed.
 helm ls
 
 ```
 You now need to get the external IP of the Loadbalancer service that has been provisioned.
-Run `kubectl get services --namespace <namespace>` to get the external IP of the nginx-ingress service.  Your output will look similar to mine.
+Run `kubectl get services --namespace todo-app` to get the external IP of the nginx-ingress service.  Your output will look similar to mine.
 
 ```sh
 NAME                   TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)        AGE
@@ -49,7 +49,7 @@ Then update the ingress resource to reflect the external IP.
 
 ```sh
 #this will load the yaml manifest in your editor.
-kubectl edit ingress/todo-app-ingress --namespace <namespace>
+kubectl edit ingress/todo-app-ingress --namespace todo-app
 ```
 
 Update the `host:` field with your `EXTERNAL-IP.nip.io` and save the file. kubectl will update the ingress with the new value.  Note, the host field only accepts a valid DNS name, IP addresses are not allowed.  To deal with this we will use a dynamnic DNS service called nip.io.

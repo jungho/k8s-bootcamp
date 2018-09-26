@@ -11,7 +11,7 @@
 # 
 # 2. Deploy busybox
 # 
-#  kubectl run buzybox --image busybox -- sleep 100000
+#  kubectl run busybox --image busybox:1.28 -- sleep 100000
 # 
 # 3. Get the name of the busybox pod and get access to its shell
 #
