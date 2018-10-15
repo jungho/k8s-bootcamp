@@ -1,0 +1,66 @@
+#In this example, we are going to demonstrate the rescheduling of pods with AzureDisk volumes across nodes.  To understand
+#taints, see the examples in the scheduling directory.  We also create a statefulset, see the examples in the statefulset
+#directory for details on statefulsets.
+#
+#We will first create a stateful set that will dynamically provision PersistentVolumes using the default storageclass
+#which on AKS is AzureDisk.  We will then deploy the statefulset and see the pods schedule across the nodes.  We 
+#will then taint one of the nodes with the NoExecute tain that the pods do not tolerate.  This will force those pods
+#to be rescheduled.
+#
+# 1. Deploy the statefulset - kubectl create -f rescheduling-azuredisk.yaml
+# 2. See what nodes the pods are deployed to - kubectl get pods
+# 3. On one of the nodes that have pods, taint with the NoExecute effect - kubetcl taint nodes <node-name> dedicated=nginx:NoExecute
+# 4. Get the pods again with 'watch' and see the pods get rescheduled and the PVs get detached/re-attached - kubectl get pods -w
+
+# Headless service for stable DNS entries of StatefulSet members.
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - name: nginx
+    port: 80
+  #This is what makes this service headless
+  clusterIP: None
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  serviceName: nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: data #reference the volumeClaimTemplate below
+          mountPath: /data/db
+  #this is a key difference with statefulsets
+  #A unique volume will be attached to each pod
+  #On AKS this will provision an PV with Azuredisk
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      #If no storageClassName is provided the default storage class will be used
+      #storageClassName: "standard"  
+      resources:
+        requests:
+          storage: 5Gi

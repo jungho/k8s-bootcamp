@@ -1,0 +1,52 @@
+#Here we deploy two pods, both refernce the SAME PersistentVolumeClaim.  The PV requested by this PVC will have 
+#RWO access mode and will be azuredisk.  What do you think will happen?  Understanding this example, helps you understand
+#what is access mode.  
+
+# 1. kubectl create -f default-class-pvc.yml
+# 2. kubectl create -f access-mode.yml
+# 3. exec into busybox-1 and write to /mnt/data/test 
+# 4. exec into busybox-2 and read from /mnt/data/test
+# 5. kubectl get pods -o wide, where were the busybox pods scheduled to?
+
+# Access mode controls how the data volume is mounted onto nodes.  
+# RWO means "the volume can be mounted as read-write by a single node".  This means the azure disk is mounted
+# onto a single node, PVC to PV is one to one, as both pods reference the same PVC, they are scheduled onto
+# the SAME node. See  https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes to understand access modes.
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: busybox-1
+spec:
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: pvc-default-class
+  containers:
+  - name: busybox-1
+    image: busybox:1.28
+    volumeMounts:
+    - mountPath: "/mnt/data"
+      name: data
+    command: 
+      - 'sleep'
+      - '60000'
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: busybox-2
+spec:
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: pvc-default-class
+  containers:
+  - name: busybox-2
+    image: busybox:1.28
+    volumeMounts:
+    - mountPath: "/mnt/data"
+      name: data
+    command:
+      - 'sleep'
+      - '60000'
