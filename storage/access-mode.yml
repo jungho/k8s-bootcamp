@@ -1,5 +1,5 @@
-#Here we deploy two pods, both refernce the SAME PersistentVolumeClaim.  The PV requested by this PVC will have 
-#RWO access mode and will be azuredisk.  What do you think will happen?  Understanding this example, helps you understand
+#Here we deploy two pods, both reference the SAME PersistentVolumeClaim.  The PV requested by this PVC will have 
+#RWO access mode and will be azuredisk.  What do you think will happen?  Understanding this example helps you understand
 #what is access mode.  
 
 # 1. kubectl create -f default-class-pvc.yml
