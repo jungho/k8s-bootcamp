@@ -84,6 +84,14 @@ kubectl auth can-i create pods --namespace kube-system
 kubectl auth can-i get configmaps --namespace kube-system --as system:serviceaccount:kube-system:default
 ```
 
+### Service Accounts ###
+
+Your Pods can also have identity.  This is necessary if your containers need to access the API server and you want to control what that container process can do via RBAC.  This identity is represented by the ServiceAccount resource.  ServiceAccounts are namespaced resources, hence the full name for a given service account is `system:serviceaccount:NAMESPACE:NAME`.  When the Pod executes, the containers in the Pod executes as the identity represented by the ServiceAccount.  You can bind RBAC permissions to this ServiceAccount - this is relevant when it comes to accessing the API Server; you can also leverage a Kubernetes service called [SubjectAccessReview API](https://kubernetes.io/docs/reference/access-authn-authz/authorization/) to verify whether a given process can access other Kubernetes components (e.g. the kubelet).
+
+By default, each Pod gets a default service account within the namespace it is deployed to.  You can also create you own ServiceAccounts to have more granular control.  When a ServiceAccount is created, regardless of whether it is a default account or custom, this triggers the creation of a secret.  This secret is a token (a JWT token) and it used when accessing the API server.
+
+See [service-account.yaml](./service-account.yaml) for an example of creating a ServiceAccount and using it from a Pod.
+
 ## Pod Security Policies ##
 
 PodSecurityPolicy (PSP) resources enable the cluster admin to specify security contraints cluster wide for all pods.  In order for a Pod to be deployed onto the cluster, the pod template must meet the requirements specified in the PSP.  Note the policy is enforced at deployment time, not at runtime.  
@@ -140,6 +148,10 @@ From above, you can see that NetworkPolicies are applied to pods within a given 
 
 See this this [blog post on k8s.io](http://blog.kubernetes.io/2017/10/enforcing-network-policies-in-kubernetes.html) for more info on Network Policies.  See also the excellent [Network Policy Recipes](https://github.com/ahmetb/kubernetes-network-policy-recipes) for some in-depth examples of policies.
 
+### Network Policies on AKS ###
+
+As AKS is a managed Kubernetes service you do not have means of configuring the master nodes beyond the capabilities exposed by az cli e.g. you do not have access to the master nodes directly.  Furthermore, today, AKS supports on the kubenet and Azure CNI network plugins and neither supports network policies.  Support for the Calico plugin is coming but in the meantime, you will need to use [kube-router](https://github.com/cloudnativelabs/kube-router).  Kube-router is an open source project that enables you to enforce network policty without a CNI that supports it.  It is deployed as a Daemonset (hence on every node) and leverages native Linux kernel features.  See this excellent blog for how to get kube-router deployed on AKS.  https://www.techdiction.com/2018/06/02/enforcing-network-policies-using-kube-router-on-aks/
+
 ## pod.spec.securityContext ##
 
 The pod specification enables you to set security constraints at the pod level (applies to all containers) and at the container level.  
@@ -156,7 +168,7 @@ Reviewing your pod spec from the security perspective should be part of your cod
 
 ## Verifying Your Security Configuration ##
 
-[Aquasec](www.aquasec.io) which provides a very comprehensive security monitoring platform for Kubernetes has opensourced their [kube-bench](https://github.com/aquasecurity/kube-bench) tool.  Kube-bench essentially audits your deployment from a security configuration perspective.  Definitely recommend you incorporate into your security governance on a regular basis.  Another product that is very powerful is [Twistlock](https://www.twistlock.com/). 
+[Aquasec](www.aquasec.io) which provides a very comprehensive security monitoring platform for Kubernetes has opensourced their [kube-bench](https://github.com/aquasecurity/kube-bench) tool.  Kube-bench essentially audits your deployment from a security configuration perspective.  It follows the guidelines defined within the [CIS Kubernetes Benchmark](https://www.cisecurity.org/benchmark/kubernetes/).  A related tool is [kube-hunter](https://github.com/aquasecurity/kube-hunter) that helps identifiy potential security holes within your cluster configuration. Think of it as pen-testing for kubernetes configuration.   These tools can be incorporated into your CI/CD pipeline during development.  For production, I do recommend a tool like Aquasec or Twislock as it provides many more capabilities.
 
 ## Bleeding Edge ##
 
@@ -167,6 +179,7 @@ There are multiple opensource projects currently gaining attention that takes di
 
 ## Reference ##
 
+- [kubernetes-security.info, An amazing security resource for Kubernetes.](https://kubernetes-security.info/)
 - [Using RBAC Authorization](https://kubernetes.io/docs/admin/authorization/rbac/)
 - [OpenID Connect Auth Flow on Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-openid-connect-code)
 - [Integrating AKS and Azure Active Directory](https://docs.microsoft.com/en-us/azure/aks/aad-integration)
