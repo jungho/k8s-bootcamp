@@ -24,6 +24,12 @@ You will need to up the following files and update the host field to reflect the
 
 *Note:  The nginx ingress controller accesses the API Server to read resources.  Hence, it must be authorized to access the API Server.  
 
+## Routing Across Namespaces ##
+
+It is important to note that ingress rules are scoped to namespaces and those rules are not aware of services in other namespaces.  For example, let's say you have a service named `books` in namespace `online` and another service also named `books` in namespace `bricksandmortar`, you can't have an ingress resource with a rule to route to `books.online` or `books.bricksandmortar`.  Instead, you would have to have separate ingress resources in each namespace that has a rule to route to the `books` service in that namespace.  You would then deploy a single ingress controller that would consume all the ingress resources across all namespaces.  This also means that you need to ensure route rule do not overlap across ingress rules.  See this long github issue for the background context of this design decision. https://github.com/kubernetes/kubernetes/issues/17088.
+
+Note, another way to specify routing rules that recognizes `service.namespace` pattern, you can use [Ambassador](https://www.getambassador.io/) which uses Envoy Proxy behind the scenes.
+
 ## Reference ##
 
 * [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/)
