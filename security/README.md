@@ -203,3 +203,6 @@ There are multiple opensource projects currently gaining attention that takes di
 - [bane - tool to help create custom AppArmor profiles](https://github.com/genuinetools/bane)
 - [Default Linux Capabilities](https://rhelblog.redhat.com/2016/10/17/secure-your-containers-with-this-one-weird-trick/)
 - [CIS Kubernetes Benchmark](https://www.cisecurity.org/benchmark/kubernetes/)
+- [RBAC-Manager - An operator to simplify managing RBAC through CRDs](https://github.com/reactiveops/rbac-manager)
+- [Grafeas - component meta-data API to implement auditing and governance across your software supply chain](https://grafeas.io/)
+- [Kelsey Hightower's example of using Dynamic Admission Controllers to integrate with Grafeas to ensure containers are signed with a key before allowing it to be deployed!](https://github.com/kelseyhightower/grafeas-tutorial)
