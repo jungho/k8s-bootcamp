@@ -26,6 +26,12 @@ Here is an excellent diagram from the [Kubernetes in Action](https://www.manning
 
 See [Controlling access to the K8S API](https://kubernetes.io/docs/admin/accessing-the-api/) to set up HTTP Basic Auth authentication, and see [Azure Active Directory plugin for client authentication with OIDC](https://github.com/kubernetes/client-go/tree/master/plugin/pkg/client/auth/azure) to set up authentication with your Azure AD tenant.
 
+### Admission Controllers ###
+
+After a request to the api server is authenticated and authorized, multiple admission controllers kick in.  There are two types of admission contollers, Validating and Mutating.  Validating admission controllers validates the resource to ensure it meets some policy prior to it being persisted in etcd.  Mutating admission controlles mutates the resource to ensure some policy is met prior to it being persisted in etcd. Note, an admission controller can be both validating and mutating. Any admission controller can also reject a resource.  For example, PodSecurityPolicy is enforced by the PodSecurityPolicy admission controller (see below).  For the full list of built-in admission controllers (that need to be enabled/disabled by the cluster admin) see this reference. https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/
+
+Note, there are also admission controller webhooks.  These are essentially admission controller that delegate the responsibility of validating and mutating to an external service.  As of v1.9, there is also the Dynamic Admission Controller which enable you to implement your own admission controllers and deploy them separately from K8S.  An example is Kelsey Hightower's [Grafeas example](https://github.com/kelseyhightower/grafeas-tutorial) that leverages Grafeas meta-data API to verify your images are properly signed prior to deploying the pods.
+
 Below we will show setting up authentication and RBAC authorization using x509 certificates.
 
 ### Authenticating using x509 certs ###
