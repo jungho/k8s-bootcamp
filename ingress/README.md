@@ -12,7 +12,7 @@ Why should you use Ingress when there already is the NodePort and Loadbalancer s
 
 We will deploy two versions of our pod-details api and deploy two different ingress objects - one that routes based on host, and the other by path.  See [./create-ingress-example.sh](create-ingress-example.sh) for how to deploy the example.  Note, depending on whether RBAC is enabled, you will need to update the [./create-ingress-example.sh](create-ingress-example.sh).  See the file for instructions.
 
-You will need to up the following files and update the host field to reflect the IP or hostname of your cluster.
+You will need to setup the following files and update the host field to reflect the IP or hostname of your cluster.
 
 - ingress-rule-multiple-host.yml
 - ingress-rule-single-host.yml
