@@ -36,7 +36,7 @@ You then reference the docker-registry secret from your pod manifest.
 ```yaml
 spec:
   imagePullSecrets:
-    name: "secret-name"
+  - name: "secret-name"
 ```
 
 See [platform/azure-acr/README](../platform/azure-acr/README.md) for instructions on how to use [Azure Container Registry](https://docs.microsoft.com/en-us/azure/container-registry/) for your images.
