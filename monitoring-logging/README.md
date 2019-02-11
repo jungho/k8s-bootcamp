@@ -52,10 +52,10 @@ helm install coreos/kube-prometheus --name kube-prometheus --set global.rbacEnab
 #5.  Take a look at what was installed
 kubectl get pods -n monitoring
 
-#6.  Port-forward to the Grafana dashboard
-kubectl port-forward $(kubectl get  pods --selector=app=kube-prometheus-grafana -n  monitoring --output=jsonpath="{.items..metadata.name}") -n monitoring  3000
+#6.  Create a Loadbalancer service to access the Grafana dashboard
+kubectl create -f dashboard-service.yaml
 
-#7.  Open up a brower to http://localhost:3000 and you will see the Grafana dashboard.
+#7.  Get the external IP of the service then access the dashboard via your browser.
 
 ```
 
