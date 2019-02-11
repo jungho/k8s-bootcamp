@@ -165,11 +165,7 @@ When working with Kubernetes, you will very quickly discover that you will be sw
 
 ## Install Helm
 
-To install helm follow the instruction [here](https://github.com/kubernetes/helm/blob/master/docs/install.md). Install v2.12.3. Note that to install the server side of Helm (tiller), you need the K8S cluster running. 
-
-```sh
-helm init --upgrade
-```
+To install helm follow the instruction [here](https://github.com/kubernetes/helm/blob/master/docs/install.md). Install v2.12.3. Note that to install the server side of Helm (tiller), you need the K8S cluster running. See the  [README.md](../../helm/README.md) in the helm directory.
 
 ## Bringing down your cluster
 
