@@ -32,6 +32,7 @@ We will be using the helm chart published by CoreOS to deploy the operator.  Cor
 If you are deploying to AKS version 1.9 or greater, you must create the necessary rolebinding to enable the serviceaccount kube-system:default to create resources within the monitoring namespace.  This not required for Minikube.
 
 ```sh
+#Only do this if you have not already done so when setting up helm.
 kubectl create -f default-rolebinding.yaml
 ```
 

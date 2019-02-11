@@ -1,0 +1,24 @@
+# This service will provide access to all pods  hosting grafana-dashboard - with the label 'app=kube-prometheus-grafana'
+# It will listen on port 3000 and route requests to a grafana port 3000
+# Deploy using 'kubectl create -f dashboard-service.yml'
+# Get the service 'kubectl get service/kube-prometheus-grafana-dashboard'
+# You will see that the external IP is 'pending'.  
+# Wait until the external IP and port is provided.  
+# run curl http://ip:3000/ and you will see grafana coming up.
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  kube-prometheus-grafana-dashboard
+spec:
+  selector:
+  # used to select the pods to route requests
+    app: kube-prometheus-grafana
+  #
+  # Here we are exposing the service through a LoadBalancer.
+  #
+  type:  LoadBalancer 
+  ports:
+  - name:  http
+    port:  3000
+    targetPort:  3000
