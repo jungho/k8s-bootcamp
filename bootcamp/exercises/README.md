@@ -47,6 +47,8 @@ Optionally, install the following extensions (search in the extensions tab):
 
 ## Verify your Azure subscription ##
 
+*This portion is only required if you are working from your own Azure subscription*
+
 Make sure all the required resource providers are registered in your Azure subscription.  As you will be creating network, compute and storage resources on Azure, and you will be using Azure Container Service, you need to ensure you have the following providers registered in your Azure subscription:
 
 * Microsoft.Network
@@ -96,35 +98,23 @@ az aks get-versions -l <region> -o table
 
 #You should see something like this.        
 KubernetesVersion    Upgrades
--------------------  ---------------------------------------------------------------------------------
-1.10.6               None available
-1.10.5               1.10.6
-1.10.3               1.10.5, 1.10.6
-1.9.9                1.10.3, 1.10.5, 1.10.6
-1.9.6                1.9.9, 1.10.3, 1.10.5, 1.10.6
-1.9.2                1.9.6, 1.9.9, 1.10.3, 1.10.5, 1.10.6
-1.9.1                1.9.2, 1.9.6, 1.9.9, 1.10.3, 1.10.5, 1.10.6
-1.8.14               1.9.1, 1.9.2, 1.9.6, 1.9.9
-1.8.11               1.8.14, 1.9.1, 1.9.2, 1.9.6, 1.9.9
-1.8.10               1.8.11, 1.8.14, 1.9.1, 1.9.2, 1.9.6, 1.9.9
-1.8.7                1.8.10, 1.8.11, 1.8.14, 1.9.1, 1.9.2, 1.9.6, 1.9.9
-1.8.6                1.8.7, 1.8.10, 1.8.11, 1.8.14, 1.9.1, 1.9.2, 1.9.6, 1.9.9
-1.8.2                1.8.6, 1.8.7, 1.8.10, 1.8.11, 1.8.14, 1.9.1, 1.9.2, 1.9.6, 1.9.9
-1.8.1                1.8.2, 1.8.6, 1.8.7, 1.8.10, 1.8.11, 1.8.14, 1.9.1, 1.9.2, 1.9.6, 1.9.9
-1.7.16               1.8.1, 1.8.2, 1.8.6, 1.8.7, 1.8.10, 1.8.11, 1.8.14
-1.7.15               1.7.16, 1.8.1, 1.8.2, 1.8.6, 1.8.7, 1.8.10, 1.8.11, 1.8.14
-1.7.12               1.7.15, 1.7.16, 1.8.1, 1.8.2, 1.8.6, 1.8.7, 1.8.10, 1.8.11, 1.8.14
-1.7.9                1.7.12, 1.7.15, 1.7.16, 1.8.1, 1.8.2, 1.8.6, 1.8.7, 1.8.10, 1.8.11, 1.8.14
-1.7.7                1.7.9, 1.7.12, 1.7.15, 1.7.16, 1.8.1, 1.8.2, 1.8.6, 1.8.7, 1.8.10, 1.8.11, 1.8.14
+-------------------  -----------------------
+1.12.4               None available
+1.11.6               1.12.4
+1.11.5               1.11.6, 1.12.4
+1.10.12              1.11.5, 1.11.6
+1.10.9               1.10.12, 1.11.5, 1.11.6
+1.9.11               1.10.9, 1.10.12
+1.9.10               1.9.11, 1.10.9, 1.10.12
 
 ```
 
-* Create the Kubernetes cluster.  We will use version 1.10.x
+* Create the Kubernetes cluster.  We will use version 1.12.4
 
 ```sh
 #this will create a cluster with 1 master node, 2 worker nodes with Kubernetes version 1.10.3
 #replace <cluster-name> with the desired name for your cluster, replace <rg-group> with you resource group name
-az aks create -g <rg-name> -n <cluster-name> -c 2 -k 1.10.3 -l <region> --generate-ssh-keys
+az aks create -g <rg-name> -n <cluster-name> -c 2 -k 1.12.4 -l <region> --generate-ssh-keys
 
 #list your AKS cluster
 az aks list -o table
@@ -132,7 +122,7 @@ az aks list -o table
 #The result will be a table with your AKS cluster name, location, ResourceGroup...
 Name         Location    ResourceGroup    KubernetesVersion    ProvisioningState    Fqdn
 -----------  ----------  ---------------  -------------------  -------------------  ---------------------------------------------------------------
-aks-cluster  canadaeast  k8s-example      1.10.3               Succeeded            aks-cluste-k8s-example-17ef54-83abd6a2.hcp.canadaeast.azmk8s.io
+aks-cluster  canadaeast  k8s-example      1.12.4               Succeeded            aks-cluste-k8s-example-17ef54-83abd6a2.hcp.canadaeast.azmk8s.io
 
 ```
 
@@ -153,8 +143,8 @@ kubectl get nodes
 
 #you should see something like this
 NAME                       STATUS    ROLES     AGE       VERSION
-aks-nodepool1-89511720-0   Ready     agent     8m        v1.10.3
-aks-nodepool1-89511720-1   Ready     agent     8m        v1.10.3
+aks-nodepool1-89511720-0   Ready     agent     8m        v1.12.4
+aks-nodepool1-89511720-1   Ready     agent     8m        v1.12.4
 ```
 
 * Start up proxy to tunnel to the Kubernetes Dashboard
@@ -175,7 +165,7 @@ When working with Kubernetes, you will very quickly discover that you will be sw
 
 ## Install Helm
 
-To install helm follow the instruction [here](https://github.com/kubernetes/helm/blob/master/docs/install.md). Install v2.9.1. Note that to install the server side of Helm (tiller), you need the K8S cluster running. 
+To install helm follow the instruction [here](https://github.com/kubernetes/helm/blob/master/docs/install.md). Install v2.12.3. Note that to install the server side of Helm (tiller), you need the K8S cluster running. 
 
 ```sh
 helm init --upgrade
@@ -194,7 +184,7 @@ This part is only for those of you who want to work on a local cluster with the 
 
 See the installation instructions for your OS [here](https://github.com/kubernetes/minikube/releases)
 
-*I have used v0.28.2*
+*I have used v0.33.1*
 
 *Note for Windows, you need to make a decision if you are going to use Hyper-V or Virtualbox for virtualization.  If you have installed Docker with Hyper-V then you have to choose Hyper-V for Minikube also to support both.*
 
