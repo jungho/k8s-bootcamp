@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-deployWithConduit=false
+deployWithLinkerd=false
 namespace='default'
 
-function checkConduitInstalled {
-    if conduit version
+function checkLinkerdInstalled {
+    if linkerd version
     then
-      echo "conduit is installed"
+      echo "linkerd is installed"
     else
-      echo "conduit is not installed.  Please go to https://conduit.io/getting-started/ for instructions on how to install.";
+      echo "linkerd is not installed.  Please go to https://linkerd.io/2/getting-started/ for instructions on how to install.";
       exit 1;
     fi
 }
@@ -16,14 +16,14 @@ function checkConduitInstalled {
 while getopts :cn: opt; do
     case $opt in
         c)
-            deployWithConduit=true
-            checkConduitInstalled
+            deployWithLinkerd=true
+            checkLinkerdInstalled
             ;;
         n)
             namespace=${OPTARG:-'todo-app'}
             ;;
         \?) #invalid option
-            echo "usage: ./deploy-todo-app [-c] [-n namespace] default namespace is 'todo-app'"
+            echo "usage: ./deploy-todo-app [-c] [-n namespace] default namespace is 'default'"
             exit 1
             ;;
     esac
@@ -41,14 +41,14 @@ kubectl create --namespace="$namespace" -f todo-ui-config.yaml
 
 kubectl create -f mongodb-deployment.yaml --namespace="$namespace"
 
-if [ "$deployWithConduit" = true ]; then
+if [ "$deployWithLinkerd" = true ]; then
     echo "deploying todo-app to namespace: '$namespace' WITH the Conduit side proxy."
 
-    conduit inject user-api-deployment.yaml | kubectl create --namespace="$namespace" -f -
-    conduit inject todo-api-deployment.yaml | kubectl create --namespace="$namespace" -f -
-    conduit inject todo-ui-deployment.yaml | kubectl create --namespace="$namespace" -f -
+    linkerd inject user-api-deployment.yaml | kubectl create --namespace="$namespace" -f -
+    linkerd inject todo-api-deployment.yaml | kubectl create --namespace="$namespace" -f -
+    linkerd inject todo-ui-deployment.yaml | kubectl create --namespace="$namespace" -f -
     echo ""
-    echo "access the Conduit Dashboard by executing 'conduit dashboard'"
+    echo "access the Linkerd Dashboard by executing 'linkerd dashboard'"
 else
     echo "deploying todo-app to namespace: '$namespace'"
     kubectl create -f user-api-deployment.yaml --namespace="$namespace"
