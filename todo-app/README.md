@@ -11,7 +11,3 @@ This is a good exercise to understand what is required to manually deploy a micr
 ## Deploy the application using Helm ##
 
 As your applications become more complex, you will quickly realize that you will need Helm to package your applications.  See [helm/README.md](../helm/README.md)
-
-# Developers #
-
-To build, test and deploy the application see the Developers [guide](./DEV-README.md).
