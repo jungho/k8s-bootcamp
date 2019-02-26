@@ -16,7 +16,7 @@ You will deploy the application to its own namespace called todo-app.
 kubectl create namespace todo-app
 
 #Run the command
-./deploy-todo-app.sh todo-app
+./deploy-todo-app.sh -n todo-app
 
 #get the deployed services to get the external IP to the application
 #for ACS or AKS, the -w flag stands for watch; as ACS/AKS will provision 
