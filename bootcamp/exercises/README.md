@@ -15,6 +15,8 @@ You will need the following tools installed:
 
 **Tip: Install Azure Account Extension to access Azure Cloud Shell from VS Code! https://www.michaelcrump.net/azure-tips-and-tricks49/**
 
+**If you want to work locally from your workstation, continue with the instructions below.**
+
 ## Installing Azure CLI
 
 Install the latest version of azure cli for your operating system from [here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
